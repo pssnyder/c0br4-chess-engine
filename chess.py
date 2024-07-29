@@ -1,6 +1,5 @@
 import os
 import chess
-import chess.engine
 import logging
 import csv
 import json
