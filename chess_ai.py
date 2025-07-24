@@ -23,9 +23,9 @@ def define_strategy(strategy):
     if strategy == 0:
         return "Random Choice Strategy"
     elif strategy == 1:
-        return "Minimax Strategy"
+        return "Strategic Move Priority (Captures & Center)"
     elif strategy == 2:
-        return "Monte Carlo Tree Search"
+        return "Move Evaluation Strategy"
     else:
         logging.error(f"Strategy Definition Not Found for Strategy #{strategy}")
         return "Unknown Strategy"
@@ -33,7 +33,7 @@ def define_strategy(strategy):
 class ChessGame:
     def __init__(self):
         self.board = chess.Board()
-        self.engine = chess.engine.SimpleEngine.popen_uci("/path/to/your/engine")
+        self.engine = None  # We'll implement strategies without external engines
         self.game_over = False
 
     def display_board(self):
@@ -53,14 +53,71 @@ class ChessGame:
         return list(self.board.legal_moves)
 
     def ai_move(self, strategy):
+        possible_moves = self.get_possible_moves()
+        if not possible_moves:
+            return None
+            
         if strategy == 0:
-            return random.choice(self.get_possible_moves())
+            # Random strategy
+            return random.choice(possible_moves)
         elif strategy == 1:
-            # Implement Minimax or other strategy
-            return self.engine.play(self.board, chess.engine.Limit(time=0.1)).move
+            # Simple minimax-like strategy: prioritize captures and central moves
+            return self.simple_strategic_move(possible_moves)
         elif strategy == 2:
-            # Implement MCTS or other strategy
-            pass
+            # Simple evaluation strategy: pick the move that results in the best immediate position
+            return self.evaluate_moves(possible_moves)
+        else:
+            return random.choice(possible_moves)
+    
+    def simple_strategic_move(self, possible_moves):
+        """Simple strategy that prioritizes captures, then center control"""
+        # First, try to find capturing moves
+        captures = [move for move in possible_moves if self.board.is_capture(move)]
+        if captures:
+            return random.choice(captures)
+        
+        # If no captures, prefer moves towards the center
+        center_squares = [chess.D4, chess.D5, chess.E4, chess.E5]
+        center_moves = [move for move in possible_moves if move.to_square in center_squares]
+        if center_moves:
+            return random.choice(center_moves)
+        
+        # Otherwise, random move
+        return random.choice(possible_moves)
+    
+    def evaluate_moves(self, possible_moves):
+        """Evaluate moves based on simple piece values"""
+        piece_values = {
+            chess.PAWN: 1,
+            chess.KNIGHT: 3,
+            chess.BISHOP: 3,
+            chess.ROOK: 5,
+            chess.QUEEN: 9,
+            chess.KING: 0
+        }
+        
+        best_move = None
+        best_score = float('-inf')
+        
+        for move in possible_moves:
+            score = 0
+            
+            # Bonus for captures
+            if self.board.is_capture(move):
+                captured_piece = self.board.piece_at(move.to_square)
+                if captured_piece:
+                    score += piece_values.get(captured_piece.piece_type, 0)
+            
+            # Small bonus for center control
+            center_squares = [chess.D4, chess.D5, chess.E4, chess.E5]
+            if move.to_square in center_squares:
+                score += 0.5
+            
+            if score > best_score:
+                best_score = score
+                best_move = move
+        
+        return best_move if best_move else random.choice(possible_moves)
 
     def play_turn(self, strategy):
         if PLAY_TYPE == 0:
@@ -72,7 +129,10 @@ class ChessGame:
                 print("Invalid move. Try again.")
         else:
             move = self.ai_move(strategy)
-            self.make_move(move)
+            if move:
+                self.make_move(move)
+            else:
+                logging.error("No valid move found by AI")
 
     def play_game(self, strategy):
         while not self.board.is_game_over():
