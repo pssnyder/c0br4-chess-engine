@@ -30,11 +30,11 @@ Implemented (done)
 High Priority Backlog (next items to work on)
 --------------------------------------------
 
-- [ ] Time management (wtime/btime/movetime/movestogo) — convert clock info into safe per-move time allocation with increment handling for 2/1 and 5/5 games.
-- [ ] Game phase detection (`chess_ai.py`) — tactical vs endgame differentiation based on piece count (14 pieces or less = endgame).
-- [ ] Endgame evaluation function, favor positions with opponents king near edge or corners of board and keeping our king close to opponent king (`chess_ai.py`) — material weighted endgame phase.
-- [ ] Modify move ordering to prioritize checks, captures, pawn promotions, and penalize for moving our piece to a square attacked by an opponent pawn (`chess_ai.py`).
-- [ ] Position search efficiency testing for base search, +alpha/beta, +move ordering, so that we can determine these features work properly (`chess_ai.py`) — A/B testing with metrics.
+- [x] Time management (wtime/btime/movetime/movestogo) — convert clock info into safe per-move time allocation with increment handling for 2/1 and 5/5 games.
+- [x] Game phase detection (`chess_ai.py`) — tactical vs endgame differentiation based on piece count (14 pieces or less = endgame).
+- [x] Endgame evaluation function, favor positions with opponents king near edge or corners of board and keeping our king close to opponent king (`chess_ai.py`) — material weighted endgame phase.
+- [x] Modify move ordering to prioritize checks, captures, pawn promotions, and penalize for moving our piece to a square attacked by an opponent pawn (`chess_ai.py`).
+- [x] Visual testing GUI with comprehensive engine interface (`chess_testing_gui.py`) — universal chess engine testing framework with UCI compatibility, real-time move/evaluation logging, session-based data collection, and exportable test results.
 
 Medium Priority Backlog
 -----------------------
