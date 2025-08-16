@@ -1,4 +1,4 @@
-This guide is a modified transcription of the video "I Built a Chess AI," focusing specifically on the creation of the chess engine and AI. It assumes you will be using an existing library like python-chess to handle the board representation and move generation, allowing you to concentrate on the core logic of the AI itself.
+This guide is a modified transcription of the video "I Built a Chess AI," focusing specifically on the creation of the chess engine and AI. It assumes you will be using an existing library to handle the board representation and move generation, allowing you to concentrate on the core logic of the AI itself.
 
 ### **The AI's Search and Evaluation System**
 
@@ -12,7 +12,7 @@ The core of a chess AI lies in its ability to search through possible moves and 
 
 Let's think of the AI's decision-making process as a continuous loop. At each turn, it needs to find the best possible move. Here's a walkthrough of how a modern chess engine accomplishes that.
 
-1. **Move Generation:** First, the engine uses a library like python-chess to generate a list of all legal moves from the current position. This is the starting point for our search.  
+1. **Move Generation:** First, the engine uses a library to generate a list of all legal moves from the current position. This is the starting point for our search.  
 2. **Move Ordering:** This is a crucial optimization. Before starting the deep search, the engine **orders the list of legal moves** from what it believes is the "best" to the "worst." The goal is to investigate the most promising moves first. Why? Because if a really good move is found early, it allows the search algorithm to **prune** away large portions of the search tree much faster. Common move ordering heuristics include:  
    * **Captures:** Moves that capture an opponent's piece are often considered first, as they can change the board state significantly.  
    * **Killer Moves:** Moves that have caused a cutoff (a "fail-high") in a sibling node are tried early, as they are likely to be good moves in similar positions.  

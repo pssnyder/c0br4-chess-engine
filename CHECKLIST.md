@@ -6,58 +6,48 @@ This file is the single place to track small tasks and priorities for the
 `chess-ai` engine. Add items, reorder, and check them off as we go. Keep each
 item short and actionable so we can implement exactly what you request.
 
-How to use
-----------
-- Mark completed items with `- [x]` and open items with `- [ ]`.
-- Add a one-line note after the item in parentheses if you want to specify a
-  file to edit or any constraints.
 
-Implemented (done)
--------------------
 
-- [x] Basic UCI interface (`interface.py`) — handles `uci`, `isready`, `position`, `go`, `stop`, `quit` and emits `info`/`bestmove`.
-- [x] Board management using `python-chess` (`interface.py`) — position application from `startpos`/`fen` and moves.
-- [x] Simple search driver (`chess_ai.py`) — iterative deepening wrapper calling negamax.
-- [x] Negamax with alpha-beta pruning (`chess_ai.py`) — clear, readable implementation.
-- [x] Quiescence search (captures only) (`chess_ai.py`).
-- [x] Simple evaluation: material + piece-square tables (PST) (`chess_ai.py`).
-- [x] Basic move ordering: captures first and a small killer-move mechanism (`chess_ai.py`).
-- [x] Small transposition table (FEN-keyed) for reuse (`chess_ai.py`).
-- [x] `requirements.txt` and `README.md` added.
-- [x] User Interface Integration using chess_core module (`chess_core.py`) — enhanced testing interface with live search metrics, efficiency testing, and human vs engine play.
-- [x] Code cleanup — removed duplicate functions from `chess_ai.py`, verified all modules work together.
+High Priority Backlog (Must Go)
+-------------------------------
 
-High Priority Backlog (next items to work on)
---------------------------------------------
+- [ ] Board management using simple data structures, similar to python-chess usage (we may just need to build our own) — position application from `startpos`/`fen` and moves.
+- [ ] User Interface using dark/grey dark mode theme with provided piece images.
+- [ ] Simple evaluation: material + piece-square tables (PST) for pawn, knight, bishop, and queen + static exchange evaluation (medium priority) + castling (medium priority) + rook coordination (medium priority) + king endgame (medium priority).
+- [ ] Simple search driver — iterative deepening wrapper calling negamax. Initial node and timing testing of base search to the specifications I provide earlier, which I assume you still can recall.
+- [ ] Alpha-beta pruning option — clear, readable implementation. Additional alpha-beta performance testing.
+- [ ] Basic move ordering: captures first and a small killer-move mechanism for storing beta cutoffs. Additional move priority for checks, pawn promotions, and a slight penalty for moving our piece to a square attacked by an opponent piece.
+- [ ] Quiescence search for captures and checks until position becomes quiet.
+- [ ] Small transposition table (FEN-keyed) for reuse.
+- [ ] `requirements.txt` and `README.md` updated.
+- [ ] Basic UCI interface — handles `uci`, `isready`, `position`, `go`, `stop`, `quit` and emits `info`/`bestmove`.
 
-- [x] Time management (wtime/btime/movetime/movestogo) — convert clock info into safe per-move time allocation with increment handling for 2/1 and 5/5 games.
-- [x] Game phase detection (`chess_ai.py`) — tactical vs endgame differentiation based on piece count (14 pieces or less = endgame).
-- [x] Endgame evaluation function, favor positions with opponents king near edge or corners of board and keeping our king close to opponent king (`chess_ai.py`) — material weighted endgame phase.
-- [x] Modify move ordering to prioritize checks, captures, pawn promotions, and penalize for moving our piece to a square attacked by an opponent pawn (`chess_ai.py`).
-- [x] Visual testing GUI with comprehensive engine interface (`chess_testing_gui.py`) — universal chess engine testing framework with UCI compatibility, real-time move/evaluation logging, session-based data collection, and exportable test results.
 
-Medium Priority Backlog
+Medium Priority Backlog (Should Go)
+-----------------------------------
+
+- [ ] Time management (wtime/btime/movetime/movestogo) — convert clock info into safe per-move time allocation with increment handling for 2/1 and 5/5 games.
+- [ ] Game phase detection — tactical vs endgame differentiation based on piece count (14 pieces or less = endgame).
+- [ ] King endgame evaluation function, favor positions with opponents king near edge or corners of board. Keep our king relatively immobile until we hit the endgame, then keep our king close to the opponent king — material weighted endgame phase.
+- [ ] Castling rights preservation receives a slight bonus, castling moves are highly incentivized, and king should remain on rank 1 or rank 2 until endgame, favoring positions where it has pawns in front of it or where it has minimally exposed sightlines (e.g. there are 8 possible sight lines to the king, the more of those lines that have one of our pieces blocking them the better, the more of those lines that fall off the board the better meaning we are protected on more sides and not exposed in the middle of the board).
+- [ ] Rook coordination, if already castled or castling rights already lost, give a rook incentive for being on the same file or rank. Then add an increased bonus for being on the opponents second rank during the endgame phase.
+- [ ] Visual testing GUI with comprehensive engine interface — universal chess engine testing framework with UCI compatibility, real-time move/evaluation logging, session-based data collection, and exportable test results. Providing all testing and live statistics just like the testing harness built earlier for the python version of the engine.
+- Opening book for e4 or d4: London System, Caro-Kann, Vienna Gambit, Dutch Defense, mainlines only.
+
+Low Priority Backlog
 -----------------------
 
-- [ ] Robust UCI options support (`interface.py`) — implement `setoption` and expose parameters like search depth, time, nodes, nodes/sec, value, mainline.
-- [ ] Replace FEN-keyed TT with Zobrist hashing (faster, less memory) — (would edit `chess_ai.py`).
-- [ ] Transposition table testing for more complex positions using zobrist hashing (`chess_ai.py`).
-- [ ] Quiescence expansion to captures and checks until position becomes quiet, using time control to limit search instead of max depth (if efficiency testing goes well) (`chess_ai.py`).
+- [ ] Robust UCI options support — implement `setoption` and expose parameters like search depth, time, nodes, nodes/sec, value, mainline.
+- [ ] Replace FEN-keyed TT with Zobrist hashing (faster, less memory).
+- [ ] Transposition table testing for more complex positions using zobrist hashing.
 - [ ] Unit tests and small test harness (perft tests, evaluation smoke tests) — (add `tests/`).
-- [ ] Add perft function for move-generation verification (`chess_ai.py` or util module).
-- [ ] Castling rights, castling, and king safety (`chess_ai.py`).
-
-Lower Priority / Nice to Have
------------------------------
-
-- [ ] Benchmarks and logging (nodes/sec, time breakdown) — (add small runner script).
+- [ ] Add perft function for move-generation verification.
 - [ ] GUI compatible .bat or .exe for testing purposes.
 
 Parking Lot / Future Ideas
-- [ ] Symmetrical tactical evaluation, positive for our moves resulting in, negative for opponent moves resulting in, pins, forks, skewers, discovered attacks, removing the guard, styles of tactics (`chess_ai.py`).
-- [ ] Persistent opening book support / book reader (PGN or polyglot) — (new module / data files).
-- [ ] Improve evaluation: pawn structure metrics, king safety, and mobility (`chess_ai.py`).
-- [ ] Integrate tablebase probing for simple endgames (optional).
+- [ ] Symmetrical tactical evaluation, positive for our moves resulting in, negative for opponent moves resulting in, pins, forks, skewers, discovered attacks, removing the guard, styles of tactics.
+- [ ] Improve evaluation: pawn structure, board coverage, coordination/defense, and mobility.
+- [ ] Integrate tablebase probing for simple endgames (optional depending on current king endgame performance).
 
 Notes / conventions
 -------------------
