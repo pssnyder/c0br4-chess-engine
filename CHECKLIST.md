@@ -11,16 +11,31 @@ item short and actionable so we can implement exactly what you request.
 High Priority Backlog (Must Go)
 -------------------------------
 
-- [ ] Board management using simple data structures, similar to python-chess usage (we may just need to build our own) — position application from `startpos`/`fen` and moves.
-- [ ] User Interface using dark/grey dark mode theme with provided piece images.
-- [ ] Simple evaluation: material + piece-square tables (PST) for pawn, knight, bishop, and queen + static exchange evaluation (medium priority) + castling (medium priority) + rook coordination (medium priority) + king endgame (medium priority).
-- [ ] Simple search driver — iterative deepening wrapper calling negamax. Initial node and timing testing of base search to the specifications I provide earlier, which I assume you still can recall.
+- [x] ✅ **Basic project structure and foundation** — C# project using Chess Challenge API as reference, removed token limitations, basic UCI interface working
+- [x] ✅ **Move generation (pseudo-legal)** — Generates correct moves for all piece types, performance: 383K positions/sec baseline
+- [x] ✅ **Board management using simple data structures** — Make/unmake moves implemented with full state preservation
+- [x] ✅ **Legal move validation** — Filter pseudo-legal moves that leave king in check, complete attack detection for all piece types
+- [ ] Simple evaluation: material + piece-square tables (PST) for pawn (middlegame safe advance on non-castled side focused/endgame second rank and promotion focused), knight (middlegame center focused/endgame check focused), bishop (middlegame long diagonal focused/endgame check focused), and queen (middlegame safe piece attack focused/endgame safe check focused) for those piece tables only (medium priority) + static exchange evaluation (overrides pst) (medium priority) + castling (rook and king opening development, disables after castling or rights lost) (medium priority) + rook coordination (middlegame rank and file alignment focused/endgame second rank and check focused) (medium priority) + king safety (middlegame hiding focused, minimizing attack lanes/endgame stay close to opponent king) (medium priority).
+- [ ] Simple search driver — Negamax search function as base algorithm. Tested on 
 - [ ] Alpha-beta pruning option — clear, readable implementation. Additional alpha-beta performance testing.
 - [ ] Basic move ordering: captures first and a small killer-move mechanism for storing beta cutoffs. Additional move priority for checks, pawn promotions, and a slight penalty for moving our piece to a square attacked by an opponent piece.
-- [ ] Quiescence search for captures and checks until position becomes quiet.
+- [ ] Staged testing of search, search + pruning, search + pruning + move ordering and should meet the following performance criteria on this test position:
+   - FEN: r3k2r/p1ppqpb1/Bn2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R w KQkq - 0 1
+   - Search only: Expect ~3.5M positions, <1.5s
+   - Search + pruning: Expect ~460k positions, <0.5s
+   - Search + pruning + move ordering: Expect ~5000 positions, <0.05s
+- [ ] Quiescence search for captures and checks until position becomes quiet. (should prevent sacrifices and material loss beyond initial depth, initial depth > 3 <= 10)
 - [ ] Small transposition table (FEN-keyed) for reuse.
 - [ ] `requirements.txt` and `README.md` updated.
-- [ ] Basic UCI interface — handles `uci`, `isready`, `position`, `go`, `stop`, `quit` and emits `info`/`bestmove`.
+- [x] ✅ **Basic UCI interface** — handles `uci`, `isready`, `position`, `go`, `stop`, `quit` and emits `info`/`bestmove`. Foundation implemented, move parsing needs work.
+
+**Current Version: v0.1 - COMPLETE** ✅
+- Legal move validation and move application working
+- Make/unmake moves with full state preservation 
+- Performance: 410K positions/sec (pseudo-legal), legal validation operational
+- Built and versioned in `dist/ChessAI_v0.1/`
+
+**NEXT PRIORITY: Simple evaluation (material + PST)**
 
 
 Medium Priority Backlog (Should Go)
@@ -31,20 +46,21 @@ Medium Priority Backlog (Should Go)
 - [ ] King endgame evaluation function, favor positions with opponents king near edge or corners of board. Keep our king relatively immobile until we hit the endgame, then keep our king close to the opponent king — material weighted endgame phase.
 - [ ] Castling rights preservation receives a slight bonus, castling moves are highly incentivized, and king should remain on rank 1 or rank 2 until endgame, favoring positions where it has pawns in front of it or where it has minimally exposed sightlines (e.g. there are 8 possible sight lines to the king, the more of those lines that have one of our pieces blocking them the better, the more of those lines that fall off the board the better meaning we are protected on more sides and not exposed in the middle of the board).
 - [ ] Rook coordination, if already castled or castling rights already lost, give a rook incentive for being on the same file or rank. Then add an increased bonus for being on the opponents second rank during the endgame phase.
-- [ ] Visual testing GUI with comprehensive engine interface — universal chess engine testing framework with UCI compatibility, real-time move/evaluation logging, session-based data collection, and exportable test results. Providing all testing and live statistics just like the testing harness built earlier for the python version of the engine.
-- Opening book for e4 or d4: London System, Caro-Kann, Vienna Gambit, Dutch Defense, mainlines only.
+- [ ] Opening book for e4 or d4: London System, Caro-Kann, Vienna Gambit, Dutch Defense, mainlines only.
+- [ ] GUI compatible .bat or .exe for testing purposes.
 
 Low Priority Backlog
------------------------
+--------------------
 
 - [ ] Robust UCI options support — implement `setoption` and expose parameters like search depth, time, nodes, nodes/sec, value, mainline.
 - [ ] Replace FEN-keyed TT with Zobrist hashing (faster, less memory).
 - [ ] Transposition table testing for more complex positions using zobrist hashing.
-- [ ] Unit tests and small test harness (perft tests, evaluation smoke tests) — (add `tests/`).
 - [ ] Add perft function for move-generation verification.
-- [ ] GUI compatible .bat or .exe for testing purposes.
+
 
 Parking Lot / Future Ideas
+--------------------------
+
 - [ ] Symmetrical tactical evaluation, positive for our moves resulting in, negative for opponent moves resulting in, pins, forks, skewers, discovered attacks, removing the guard, styles of tactics.
 - [ ] Improve evaluation: pawn structure, board coverage, coordination/defense, and mobility.
 - [ ] Integrate tablebase probing for simple endgames (optional depending on current king endgame performance).

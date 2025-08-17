@@ -1,22 +1,24 @@
-# Chess AI C++ Engine
+# Chess AI Engine
 
-A high-performance chess engine written in C++, converted from the original Python implementation while preserving the core architectural principles and design philosophy.
+A chess engine written in C#, built following Seb Lague's chess programming guide and using the Chess Challenge framework as a foundation. The engine removes competition constraints and focuses on building a full-featured chess engine with unlimited token usage and comprehensive functionality.
 
-## Features
+## Features (Planned)
 
-- **Negamax Search with Alpha-Beta Pruning**: Efficient tree search algorithm
-- **Iterative Deepening**: Progressive depth increase for time management
-- **Quiescence Search**: Tactical extension to avoid horizon effects
-- **Move Ordering**: Advanced heuristics including:
-  - Hash table moves (PV moves)
-  - Captures ordered by Most Valuable Victim - Least Valuable Attacker (MVV-LVA)
-  - Killer moves
-  - Pawn advance bonuses
-  - Penalty for squares attacked by opponent pawns
-- **Transposition Table**: Hash-based position caching for efficiency
-- **Game Phase Awareness**: Opening/middlegame/endgame detection
-- **Specialized Endgame Evaluation**: King activity and opposition
-- **UCI Protocol Compliance**: Standard chess engine interface
+Based on our checklist and Seb Lague's guide:
+
+### Core Engine
+- **Board Management**: Simple data structures for position representation
+- **Move Generation**: Legal move generation with special moves (castling, en passant)
+- **Search Engine**: Negamax with iterative deepening
+- **Alpha-Beta Pruning**: Efficient tree pruning
+- **Evaluation Function**: Material + piece-square tables + positional factors
+
+### Advanced Features
+- **Move Ordering**: Captures, killer moves, checks, promotions
+- **Quiescence Search**: Tactical extension for captures and checks
+- **Transposition Table**: Position caching for efficiency
+- **Time Management**: Proper time allocation
+- **UCI Protocol**: Standard chess engine interface
 
 ## Architecture
 

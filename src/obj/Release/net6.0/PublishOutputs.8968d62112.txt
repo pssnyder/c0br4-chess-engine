@@ -1,0 +1,4 @@
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\ChessAI_v0.2\ChessEngine.exe
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\ChessAI_v0.2\ChessEngine.dll
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\ChessAI_v0.2\ChessEngine.deps.json
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\ChessAI_v0.2\ChessEngine.runtimeconfig.json
