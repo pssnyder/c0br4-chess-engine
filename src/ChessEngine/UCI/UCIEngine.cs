@@ -14,7 +14,7 @@ namespace ChessEngine.UCI
     public class UCIEngine
     {
         private Board board = new();
-        private IChessBot bot = new AlphaBetaSearchBot(); // v0.3: Alpha-beta pruning search
+        private IChessBot bot = new TranspositionSearchBot(); // v0.6: Alpha-beta with move ordering, quiescence, and transposition table
         private bool isRunning = true;
         private string engineVersion;
 

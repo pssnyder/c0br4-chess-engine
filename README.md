@@ -1,232 +1,238 @@
-# Chess AI Engine
+# ChessAI Engine
 
-A chess engine written in C#, built following Seb Lague's chess programming guide and using the Chess Challenge framework as a foundation. The engine removes competition constraints and focuses on building a full-featured chess engine with unlimited token usage and comprehensive functionality.
+A modern chess engine written in C# with UCI (Universal Chess Interface) support for tournament play and GUI compatibility. Built following Sebastian Lague's chess programming guide with comprehensive search algorithms and evaluation functions.
 
-## Features (Planned)
+## Features
 
-Based on our checklist and Seb Lague's guide:
+### Search & Algorithm
+- **Alpha-beta pruning** with fail-soft negamax search
+- **Move ordering** with MVV-LVA (Most Valuable Victim - Least Valuable Attacker)
+- **Quiescence search** to handle tactical positions and avoid horizon effects
+- **Transposition table** with Zobrist hashing for position caching (100K entries)
 
-### Core Engine
-- **Board Management**: Simple data structures for position representation
-- **Move Generation**: Legal move generation with special moves (castling, en passant)
-- **Search Engine**: Negamax with iterative deepening
-- **Alpha-Beta Pruning**: Efficient tree pruning
-- **Evaluation Function**: Material + piece-square tables + positional factors
+### Evaluation
+- **Material evaluation** with standard piece values (P=100, N=300, B=300, R=500, Q=900)
+- **Piece-square tables** for positional evaluation
+- **Game phase detection** for opening/middlegame/endgame transitions
 
-### Advanced Features
-- **Move Ordering**: Captures, killer moves, checks, promotions
-- **Quiescence Search**: Tactical extension for captures and checks
-- **Transposition Table**: Position caching for efficiency
-- **Time Management**: Proper time allocation
-- **UCI Protocol**: Standard chess engine interface
-
-## Architecture
-
-The engine maintains the same clean, modular design as the original Python version:
-
-- `Position`: Board representation and move generation
-- `Evaluator`: Position evaluation with material, piece-square tables, and game phase awareness
-- `Searcher`: Search algorithms with multiple configurations
-- `UCIEngine`: UCI protocol implementation for chess GUI integration
-
-## Building
-
-### Requirements
-
-- C++17 compatible compiler (GCC 7+, Clang 5+, MSVC 2019+)
-- CMake 3.16 or later
-
-### Linux/Mac
-
-```bash
-# Clone and build
-git clone <repository>
-cd chess-ai/cpp
-
-# Quick build
-./build.sh
-
-# Build with tests
-./build.sh test
-
-# Debug build
-./build.sh debug
-
-# Clean build
-./build.sh clean release
-```
-
-### Windows
-
-```cmd
-# Clone and build
-git clone <repository>
-cd chess-ai\cpp
-
-# Quick build
-build.bat
-
-# Build with tests
-build.bat test
-
-# Debug build
-build.bat debug
-```
-
-### Manual CMake Build
-
-```bash
-mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . --config Release
-```
-
-## Usage
-
-### Command Line
-
-```bash
-# Run the engine
-./build/bin/chess-ai
-
-# The engine will start in UCI mode
-# Send UCI commands:
-uci
-isready
-position startpos moves e2e4 e7e5
-go depth 6
-```
-
-### Chess GUIs
-
-The engine is compatible with any UCI-compliant chess GUI:
-
-- **Arena Chess**: Free Windows GUI
-- **ChessBase**: Commercial Windows GUI
-- **Scid vs. PC**: Cross-platform, open source
-- **PyChess**: Linux GUI
-- **Cute Chess**: Cross-platform tournament manager
-
-## Performance
-
-The C++ implementation provides significant performance improvements over the Python version:
-
-| Configuration | Target Performance |
-|---------------|-------------------|
-| Simple Negamax | >2M nodes/sec |
-| Alpha-Beta | >500K nodes/sec |
-| Full Optimizations | >50K nodes/sec at depth 4 |
-
-Actual performance will vary based on:
-- CPU architecture (benefits from modern CPUs with fast memory)
-- Compiler optimizations (-O3, -march=native)
-- Position complexity
-- Hash table size
-
-## Engine Options
-
-Configure via UCI setoption commands:
-
-- `Hash`: Transposition table size in MB (1-1024, default: 32)
-- `Threads`: Number of search threads (1 only, default: 1)
-- `Debug`: Enable debug output (true/false, default: false)
-
-## Testing
-
-Run the test suite to verify correct implementation:
-
-```bash
-# Build and run tests
-./build.sh test
-
-# Or manually
-cd build
-./chess-ai-test
-```
-
-Tests verify:
-- Position representation and FEN parsing
-- Move generation correctness
-- Evaluation function sanity
-- Search algorithm performance
-- Game phase detection
+### Engine Interface
+- **UCI protocol** compliance for chess GUI compatibility
+- **Performance benchmarking** with detailed search statistics
+- **Versioned builds** for regression testing and development tracking
 
 ## Performance Benchmarks
 
-Compare against the Python implementation:
+Test position: `r3k2r/p1ppqpb1/Bn2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R w KQkq - 0 1`
 
+| Version | Algorithm Stack | Main Nodes | Q-Nodes | TT Hits | Time | NPS | Improvement |
+|---------|----------------|------------|---------|---------|------|-----|-------------|
+| v0.2 | Simple Negamax | 4,573,360 | 0 | 0 | 3.3s | 1.37M | Baseline |
+| v0.3 | + Alpha-Beta | 18,524 | 0 | 0 | 53ms | 343K | **354x faster** |
+| v0.4 | + Move Ordering | 10,503 | 0 | 0 | 47ms | 219K | 43% reduction |
+| v0.5 | + Quiescence | 4,349 | 9,865 | 0 | 185ms | 23K | Better tactics |
+| v0.6 | + Zobrist TT | 4,167 | 8,745 | 837 | 184ms | 23K | 6.5% cache hits |
+
+## Installation & Usage
+
+### Requirements
+- .NET 6.0 or later
+- Windows, Linux, or macOS
+
+### Quick Start
 ```bash
-# C++ engine
-echo "go depth 4" | ./build/bin/chess-ai
+# Download latest release
+cd dist/v0.6/
 
-# Python engine (from parent directory)
-echo "go depth 4" | python interface.py
+# Run the engine
+./ChessAI_v0.6.exe
+
+# Basic UCI commands
+uci                           # Initialize UCI mode
+position startpos             # Set starting position  
+position fen [fen-string]     # Set custom position
+go depth 5                    # Search to depth 5
+go movetime 5000             # Search for 5 seconds
+quit                         # Exit engine
 ```
 
-Expected improvements:
-- **10-50x faster** node throughput
-- **Reduced memory usage** through efficient data structures
-- **Better cache locality** with array-based board representation
+### Chess GUI Integration
+Compatible with UCI-supporting chess GUIs:
+- **Arena Chess GUI** (Windows)
+- **Cute Chess** (Cross-platform) 
+- **Fritz/ChessBase** (Commercial)
+- **Tarrasch Chess GUI** (Free)
+- **BanksiaGUI** (Tournament play)
 
-## Engine Strength
+## Building from Source
 
-The engine implements the same evaluation and search algorithms as the Python version:
+### Prerequisites
+```bash
+# Install .NET 6.0 SDK
+# Windows: Download from https://dotnet.microsoft.com/download
+# Linux: sudo apt install dotnet-sdk-6.0
+# macOS: brew install dotnet
+```
 
-- **Material Evaluation**: Standard piece values
-- **Piece-Square Tables**: Positional bonuses for piece placement
-- **Game Phase Adaptation**: Different evaluation in opening/middlegame/endgame
-- **Endgame Knowledge**: King activity and centralization
+### Build Commands
+```bash
+# Clone repository
+git clone <repository-url>
+cd chess-ai/src
 
-Estimated strength: ~1800-2000 Elo (depending on time control and hardware)
+# Debug build
+dotnet build
 
-## Future Enhancements
+# Release build  
+dotnet build -c Release
 
-Potential improvements while maintaining the engine's core philosophy:
+# Create portable executable
+dotnet publish -c Release -o "../dist/v0.6"
 
-- **Parallel Search**: Multi-threaded search
-- **Opening Book**: Database of opening moves
-- **Endgame Tablebases**: Perfect endgame knowledge
-- **Advanced Evaluation**: Pawn structure, king safety, mobility
-- **Search Extensions**: Check extensions, singular extensions
-- **Time Management**: Better time allocation algorithms
+# Run from source
+dotnet run
+```
 
-## Development Notes
+## Development
 
-### Maintaining Python Compatibility
+### Project Structure
+```
+src/
+├── ChessEngine/
+│   ├── Core/           # Board, Move, Piece, Square classes
+│   ├── Search/         # Search algorithms and transposition table
+│   ├── Evaluation/     # Position evaluation functions  
+│   ├── UCI/            # UCI protocol implementation
+│   └── Testing/        # Performance benchmarks
+├── VERSION             # Engine version identifier
+├── ChessEngine.csproj  # Project configuration
+└── Program.cs          # Entry point
 
-The C++ engine preserves the original design principles:
+dist/                   # Versioned engine builds
+├── v0.2/              # Simple search
+├── v0.3/              # Alpha-beta pruning
+├── v0.4/              # Move ordering
+├── v0.5/              # Quiescence search
+└── v0.6/              # Transposition table
+```
 
-- Same evaluation function coefficients
-- Identical search algorithm logic
-- Equivalent move ordering heuristics
-- Compatible UCI interface
+### Creating New Versions
+```bash
+# 1. Update version identifier
+echo "v0.7" > src/VERSION
 
-### Code Organization
+# 2. Update project assembly version
+# Edit src/ChessEngine.csproj:
+#   <AssemblyName>ChessAI_v0.7</AssemblyName>
+#   <Version>0.7.0</Version>
 
-- **Headers in `include/`**: Clean interface definitions
-- **Implementation in `src/`**: Efficient C++ implementations
-- **Tests in `tests/`**: Verification of correctness
-- **Build system**: CMake for cross-platform compilation
+# 3. Build and publish
+cd src
+dotnet publish -c Release -o "../dist/v0.7"
 
-### Performance Philosophy
+# 4. Test the new version
+cd ../dist/v0.7
+echo "uci" | ./ChessAI_v0.7.exe
+```
 
-Optimizations focus on:
-1. **Algorithmic efficiency** (alpha-beta, transposition table)
-2. **Data structure optimization** (compact move representation)
-3. **Cache-friendly access patterns**
-4. **Avoiding premature micro-optimizations**
+## Engine Architecture
 
-The goal is maintainable, fast code that preserves the engine's readable architecture.
+### Search Algorithm
+- **Negamax framework** with alpha-beta pruning
+- **Iterative deepening** for time management
+- **Principal variation** tracking
+- **Move ordering**: Captures > Promotions > Checks > Quiet moves
+- **Quiescence search**: Extends search in tactical positions
+- **Transposition table**: Zobrist hashing with 100K entries
 
-## License
+### Position Evaluation  
+- **Material counting** with standard values
+- **Piece-square tables** for positional factors
+- **Game phase detection** based on material count
+- **King safety** considerations
+- **Endgame specialization** for simplified positions
 
-Same license as the original Python implementation.
+### Move Generation
+- **Pseudo-legal generation** with legal filtering
+- **Special moves**: Castling, en passant, promotion
+- **Attack detection** for check/checkmate/stalemate
+- **Move validation** with king safety verification
+
+## Performance Tuning
+
+### Engine Settings
+The engine uses fixed parameters optimized for rapid play:
+- **Search depth**: 4 ply default
+- **Transposition table**: 100,000 entries
+- **Move ordering**: MVV-LVA + basic heuristics
+- **Quiescence depth**: Unlimited (until quiet)
+
+### Hardware Requirements
+- **Minimum**: 1 core, 100MB RAM
+- **Recommended**: 2+ cores, 512MB+ RAM  
+- **Performance scales** with CPU speed and memory bandwidth
+
+## Testing & Validation
+
+### Built-in Benchmarks
+```bash
+# Performance benchmark on standard position
+echo -e "uci\nposition fen r3k2r/p1ppqpb1/Bn2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R w KQkq - 0 1\ngo depth 4\nquit" | ./ChessAI_v0.6.exe
+
+# Starting position analysis  
+echo -e "uci\nposition startpos\ngo depth 5\nquit" | ./ChessAI_v0.6.exe
+```
+
+### Engine vs Engine Testing
+```bash
+# Compare versions with Cute Chess CLI
+cutechess-cli -engine cmd=./dist/v0.5/ChessAI_v0.5.exe \
+              -engine cmd=./dist/v0.6/ChessAI_v0.6.exe \
+              -each tc=10+0.1 -games 100
+```
 
 ## Contributing
 
-Contributions welcome! Please:
+### Development Workflow
+1. **Check the CHECKLIST.md** for current priorities
+2. **Create feature branch** for new implementations
+3. **Test thoroughly** with benchmarks and engine vs engine games
+4. **Update documentation** and version tracking
+5. **Submit pull request** with performance analysis
 
-1. Maintain compatibility with the Python version's core algorithms
-2. Include tests for new features
-3. Follow the existing code style
-4. Update documentation for significant changes
+### Code Style
+- **Clear, readable implementations** over micro-optimizations
+- **Comprehensive comments** explaining chess concepts
+- **Modular design** with separation of concerns
+- **Performance measurement** for all algorithm changes
+
+## Roadmap
+
+### v1.0 Release Targets
+- [x] Alpha-beta search with move ordering
+- [x] Quiescence search for tactical accuracy  
+- [x] Transposition table with Zobrist hashing
+- [ ] Comprehensive documentation
+- [ ] Portable executable build process
+
+### Future Enhancements (v1.x)
+- [ ] **Time management** for tournament play
+- [ ] **Enhanced evaluation** with piece-square tables
+- [ ] **Opening book** integration
+- [ ] **Endgame specialization** 
+- [ ] **Multi-threading** support
+
+## License
+
+[Specify license terms]
+
+## Acknowledgments
+
+- **Sebastian Lague**: Chess programming tutorial series
+- **Chess Challenge**: Framework reference implementation
+- **Chess programming community**: Algorithms and techniques
+
+---
+
+**Current Version**: v0.6 (Zobrist Transposition Table)  
+**Estimated Strength**: ~1500-1800 ELO  
+**Last Updated**: August 2025

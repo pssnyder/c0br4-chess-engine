@@ -4,10 +4,10 @@ S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.
 S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\ChessEngine.csproj.CoreCompileInputs.cache
 S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\ChessEngine.genruntimeconfig.cache
 S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\VERSION
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\ChessAI_v0.3.exe
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\ChessAI_v0.3.deps.json
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\ChessAI_v0.3.runtimeconfig.json
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\ChessAI_v0.3.dll
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\ChessAI_v0.3.dll
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\refint\ChessAI_v0.3.dll
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\ref\ChessAI_v0.3.dll
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\ChessAI_v0.6.exe
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\ChessAI_v0.6.deps.json
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\ChessAI_v0.6.runtimeconfig.json
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\ChessAI_v0.6.dll
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\ChessAI_v0.6.dll
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\refint\ChessAI_v0.6.dll
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\ref\ChessAI_v0.6.dll
