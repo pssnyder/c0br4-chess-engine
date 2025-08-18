@@ -11,7 +11,7 @@ using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("Chess AI Project")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("2025")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("UCI Chess Engine with Enhanced Evaluation (Rook Coordination, King Safety, King E" +
     "ndgame, Castling Incentive)")]

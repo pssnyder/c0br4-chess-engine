@@ -89,10 +89,10 @@
     "C:\\Users\\patss\\.nuget\\packages\\": {}
   },
   "project": {
-    "version": "1.0.0",
+    "version": "1.2.0",
     "restore": {
       "projectUniqueName": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\ChessEngine.csproj",
-      "projectName": "ChessAI_v1.0",
+      "projectName": "ChessAI_v1.2",
       "projectPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\ChessEngine.csproj",
       "packagesPath": "C:\\Users\\patss\\.nuget\\packages\\",
       "outputPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\obj\\",

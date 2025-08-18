@@ -214,11 +214,31 @@ namespace ChessEngine.Core
                     if (!IsValidSquare(targetSquare))
                         break;
 
-                    // Check for board edge wrapping
+                    // Check for board edge wrapping - prevent invalid moves
                     int startFile = square % 8;
+                    int startRank = square / 8;
                     int targetFile = targetSquare % 8;
-                    if (Math.Abs(direction) != 8 && Math.Abs(targetFile - startFile) > i)
-                        break;
+                    int targetRank = targetSquare / 8;
+                    
+                    // For diagonal moves, file and rank differences must be equal
+                    if (Math.Abs(direction) != 8 && Math.Abs(direction) != 1)
+                    {
+                        int fileDiff = Math.Abs(targetFile - startFile);
+                        int rankDiff = Math.Abs(targetRank - startRank);
+                        if (fileDiff != rankDiff || fileDiff != i)
+                            break;
+                    }
+                    // For straight moves (rook-like), either file or rank must stay the same
+                    else if (Math.Abs(direction) == 8)
+                    {
+                        if (targetFile != startFile)
+                            break;
+                    }
+                    else if (Math.Abs(direction) == 1)
+                    {
+                        if (targetRank != startRank)
+                            break;
+                    }
 
                     Piece targetPiece = board.GetPiece(new Square(targetSquare));
                     

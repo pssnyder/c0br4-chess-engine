@@ -4,6 +4,7 @@ using System.Threading;
 using ChessEngine.Core;
 using ChessEngine.Search;
 using ChessEngine.Testing;
+using ChessEngine.Evaluation;
 
 namespace ChessEngine.UCI
 {
@@ -100,6 +101,9 @@ namespace ChessEngine.UCI
                 case "engine":
                     SetEngine(parts);
                     break;
+                case "debug":
+                    IllegalMoveDebugger.AnalyzePosition(board);
+                    break;
                 default:
                     // Unknown command - ignore in UCI mode
                     break;
@@ -166,31 +170,49 @@ namespace ChessEngine.UCI
 
         private void HandleGo(string[] parts)
         {
-            // Parse time control parameters
-            TimeSpan timeLimit = TimeSpan.FromSeconds(1); // Default 1 second
+            // Parse time control parameters using TimeManager
+            var timeControl = TimeManager.ParseTimeControl(parts);
             
-            for (int i = 1; i < parts.Length - 1; i++)
+            // Calculate game phase for time allocation
+            double gamePhase = GamePhase.CalculatePhase(board);
+            
+            // Determine time allocation
+            int timeAllocation;
+            
+            if (timeControl.Depth > 0)
             {
-                switch (parts[i])
-                {
-                    case "movetime":
-                        if (int.TryParse(parts[i + 1], out int movetime))
-                            timeLimit = TimeSpan.FromMilliseconds(movetime);
-                        break;
-                    case "depth":
-                        // TODO: Handle depth-limited search
-                        break;
-                    case "wtime":
-                    case "btime":
-                        // TODO: Handle time control
-                        break;
-                }
+                // Fixed depth search - use generous time limit
+                timeAllocation = 30000; // 30 seconds
+            }
+            else if (timeControl.Infinite)
+            {
+                // Infinite search - use very generous time limit
+                timeAllocation = 300000; // 5 minutes
+            }
+            else
+            {
+                // Calculate optimal time allocation
+                timeAllocation = TimeManager.CalculateTimeAllocation(timeControl, board.IsWhiteToMove, gamePhase);
+            }
+            
+            // Apply material balance time multiplier
+            double materialMultiplier = GamePhase.GetMaterialTimeMultiplier(board);
+            timeAllocation = (int)(timeAllocation * materialMultiplier);
+            
+            // Output time management info for debugging
+            Console.WriteLine($"info string Game phase: {GamePhase.GetPhaseName(board)} ({gamePhase:F2})");
+            Console.WriteLine($"info string Time allocation: {timeAllocation}ms");
+            if (timeControl.WhiteTime > 0 || timeControl.BlackTime > 0)
+            {
+                int remainingTime = board.IsWhiteToMove ? timeControl.WhiteTime : timeControl.BlackTime;
+                Console.WriteLine($"info string Remaining time: {remainingTime}ms");
             }
 
-            // Start search
+            // Start search with time limit
             try
             {
-                Move bestMove = bot.Think(board, timeLimit);
+                var timeSpan = TimeSpan.FromMilliseconds(timeAllocation);
+                Move bestMove = bot.Think(board, timeSpan);
                 Console.WriteLine($"bestmove {bestMove}");
             }
             catch (Exception ex)
