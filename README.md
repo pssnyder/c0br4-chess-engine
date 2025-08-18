@@ -1,4 +1,4 @@
-# ChessAI Engine
+# C0BR4 Engine
 
 A modern chess engine written in C# with UCI (Universal Chess Interface) support for tournament play and GUI compatibility. Built following Sebastian Lague's chess programming guide with comprehensive search algorithms and evaluation functions.
 
@@ -44,7 +44,7 @@ Test position: `r3k2r/p1ppqpb1/Bn2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R w KQkq - 
 cd dist/v0.6/
 
 # Run the engine
-./ChessAI_v0.6.exe
+./C0BR4_v0.6.exe
 
 # Basic UCI commands
 uci                           # Initialize UCI mode
@@ -97,14 +97,14 @@ dotnet run
 ### Project Structure
 ```
 src/
-├── ChessEngine/
+├── C0BR4ChessEngine/
 │   ├── Core/           # Board, Move, Piece, Square classes
 │   ├── Search/         # Search algorithms and transposition table
 │   ├── Evaluation/     # Position evaluation functions  
 │   ├── UCI/            # UCI protocol implementation
 │   └── Testing/        # Performance benchmarks
 ├── VERSION             # Engine version identifier
-├── ChessEngine.csproj  # Project configuration
+├── C0BR4ChessEngine.csproj  # Project configuration
 └── Program.cs          # Entry point
 
 dist/                   # Versioned engine builds
@@ -121,8 +121,8 @@ dist/                   # Versioned engine builds
 echo "v0.7" > src/VERSION
 
 # 2. Update project assembly version
-# Edit src/ChessEngine.csproj:
-#   <AssemblyName>ChessAI_v0.7</AssemblyName>
+# Edit src/C0BR4ChessEngine.csproj:
+#   <AssemblyName>C0BR4_v0.7</AssemblyName>
 #   <Version>0.7.0</Version>
 
 # 3. Build and publish
@@ -131,7 +131,7 @@ dotnet publish -c Release -o "../dist/v0.7"
 
 # 4. Test the new version
 cd ../dist/v0.7
-echo "uci" | ./ChessAI_v0.7.exe
+echo "uci" | ./C0BR4_v0.7.exe
 ```
 
 ## Engine Architecture
@@ -176,17 +176,17 @@ The engine uses fixed parameters optimized for rapid play:
 ### Built-in Benchmarks
 ```bash
 # Performance benchmark on standard position
-echo -e "uci\nposition fen r3k2r/p1ppqpb1/Bn2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R w KQkq - 0 1\ngo depth 4\nquit" | ./ChessAI_v0.6.exe
+echo -e "uci\nposition fen r3k2r/p1ppqpb1/Bn2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R w KQkq - 0 1\ngo depth 4\nquit" | ./C0BR4_v0.6.exe
 
 # Starting position analysis  
-echo -e "uci\nposition startpos\ngo depth 5\nquit" | ./ChessAI_v0.6.exe
+echo -e "uci\nposition startpos\ngo depth 5\nquit" | ./C0BR4_v0.6.exe
 ```
 
 ### Engine vs Engine Testing
 ```bash
 # Compare versions with Cute Chess CLI
-cutechess-cli -engine cmd=./dist/v0.5/ChessAI_v0.5.exe \
-              -engine cmd=./dist/v0.6/ChessAI_v0.6.exe \
+cutechess-cli -engine cmd=./dist/v0.5/C0BR4_v0.5.exe \
+              -engine cmd=./dist/v0.6/C0BR4_v0.6.exe \
               -each tc=10+0.1 -games 100
 ```
 

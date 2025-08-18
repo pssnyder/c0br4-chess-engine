@@ -2,7 +2,7 @@
   "version": 2,
   "dgSpecHash": "l+bcNbLw7Oc=",
   "success": true,
-  "projectFilePath": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\ChessEngine.csproj",
+  "projectFilePath": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\C0BR4ChessEngine.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\patss\\.nuget\\packages\\microsoft.net.illink.analyzers\\7.0.100-1.23401.1\\microsoft.net.illink.analyzers.7.0.100-1.23401.1.nupkg.sha512",
     "C:\\Users\\patss\\.nuget\\packages\\microsoft.net.illink.tasks\\7.0.100-1.23401.1\\microsoft.net.illink.tasks.7.0.100-1.23401.1.nupkg.sha512",

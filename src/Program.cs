@@ -1,6 +1,6 @@
-using ChessEngine.UCI;
+using C0BR4ChessEngine.UCI;
 
-namespace ChessEngine
+namespace C0BR4ChessEngine
 {
     /// <summary>
     /// Main entry point for the chess engine

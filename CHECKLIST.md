@@ -2,42 +2,18 @@
 
 Purpose
 -------
-This file is the single place to track small tasks and priorities for the
-`chess-ai` engine. Add items, reorder, and check them off as we go. Keep each
-item short and actionable so we can implement exactly what you request.
+This file is the single place to track small tasks and priorities for the `chess-ai` engine. Add items, reorder, and check them off as we go. Keep each item short and actionable so we can implement exactly what you request.
 
 
-High Priority Backlog (Must Go)
--------------------------------
-
-**🚨 CRITICAL BUG - v1.0 Tournament Issue:**
-- ✅ **Illegal Move Bug**: v1.0 engine provided illegal move in tournament play, got adjudicated. ~~Need to investigate move generation/legal validation logic.~~ **FIXED in v1.1**: Bug was in GenerateSlidingMoves() - diagonal move validation was incorrect, allowing bishop to move from c1 to a8 (not a diagonal). Fixed edge detection logic to properly validate diagonal moves.
-
-```
-[Event "Engine Battle 20250817"]
-[Site "MAIN-DESKTOP"]
-[Date "2025.08.17"]
-[Round "1"]
-[White "ChessAI_v1.0"]
-[Black "Slowmate_v1.0"]
-[Result "0-1"]
-[BlackElo "1251"]
-[ECO "A00"]
-[Opening "Dunst (Sleipner-Heinrichsen-Van Geet) Opening"]
-[Time "18:57:54"]
-[Variation "1...Nf6 2.Nf3"]
-[WhiteElo "1000"]
-[TimeControl "120+1"]
-[Termination "rules infraction"]
-[PlyCount "14"]
-[WhiteType "program"]
-[BlackType "program"]
-
-1. Nc3 {(Nb1-c3) 0.00/4 0} Nf6 2. Nf3 {(Ng1-f3) 0.00/4 0} Nc6 3. Rb1
-{(Ra1-b1) 0.00/4 0} Nb4 4. Ne5 {(Nf3-e5) 0.00/4 0} Nxa2 5. Nxa2 {(Nc3xa2)
-+1.40/4 0} Nd5 6. d3 {(d2-d3) +1.60/4 0} d6 7. Nxf7 {(Ne5xf7) +4.15/4 0}
-Kxf7 {Arena Adjudication. Illegal move!} 0-1
-```
+**🚨 IMPORTANT - v2.1+ Engine Renaming**
+----------------------------------------
+I have decided to rename ChessAI to C0BR4. I have already updated all internal references to reflect this name change. However, current src files should be verified. We may also need to update any external references to git remotes. I also did not perform any rebuilds, those won't be necessary unless they are simple, for isntance the most recent version may be easy to rebuild with the correct name without disrupting its functionality, only renaming of EXE filenames, I will remapp the ChessAI results to the C0BR4 name in my results analyzer and will rename it in Arena moving forward. Here are some additional naming convention notes:
+- Formal engine name: `C0BR4` (Replaces `ChessAI`)
+- Executable naming example: `C0BR4_v2.1` (Replaces `ChessAI_v2.0`)
+- Versioning scheme: `C0BR4 v2.1`
+- Alternative syntax usage within code: `c0br4` (lowercase)
+- Repository name: `c0br4-chess-ai`
+- Contextual usage: `C0BR4ChessAI` (self-defining; this is a chess AI named C0BR4)
 
 **v1.0 Complete:**
 
@@ -61,8 +37,9 @@ Kxf7 {Arena Adjudication. Illegal move!} 0-1
 - ✅ **Transposition Table Testing**: for more complex positions using zobrist hashing.
 - ✅ **v1.0 Preparation**: `requirements.txt` and `README.md` updated.
 - ✅ **Portable v1.0 Build**: GUI compatible, fully portable .exe build process for testing purpose in Arena interactive auto-tournaments.
+- ✅ **Illegal Move Bug**: v1.0 engine provided illegal move in tournament play, got adjudicated. ~~Need to investigate move generation/legal validation logic.~~ **FIXED in v1.1**: Bug was in GenerateSlidingMoves() - diagonal move validation was incorrect, allowing bishop to move from c1 to a8 (not a diagonal). Fixed edge detection logic to properly validate diagonal moves.
 
-Medium Priority Backlog (Should Go)
+Medium Priority Backlog v2.0
 -----------------------------------
 
 - ✅ **Time management** (wtime/btime/movetime/movestogo) — convert clock info into safe per-move time allocation with increment handling for 2/1 and 5/5 games.

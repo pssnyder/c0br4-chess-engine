@@ -91,9 +91,9 @@
   "project": {
     "version": "2.0.0",
     "restore": {
-      "projectUniqueName": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\ChessEngine.csproj",
-      "projectName": "ChessAI_v2.0",
-      "projectPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\ChessEngine.csproj",
+      "projectUniqueName": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\C0BR4ChessEngine.csproj",
+      "projectName": "C0BR4_v2.0",
+      "projectPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\C0BR4ChessEngine.csproj",
       "packagesPath": "C:\\Users\\patss\\.nuget\\packages\\",
       "outputPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\obj\\",
       "projectStyle": "PackageReference",
