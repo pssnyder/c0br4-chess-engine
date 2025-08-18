@@ -1,8 +1,8 @@
-# ChessAI checklist
+# C0BR4 Chess Engine Checklist
 
 Purpose
 -------
-This file is the single place to track small tasks and priorities for the `chess-ai` engine. Add items, reorder, and check them off as we go. Keep each item short and actionable so we can implement exactly what you request.
+This file is the single place to track small tasks and priorities for the C0BR4 engine. Add items, reorder, and check them off as we go. Keep each item short and actionable so we can implement exactly what you request.
 
 
 **🚨 IMPORTANT - v2.1+ Engine Renaming**

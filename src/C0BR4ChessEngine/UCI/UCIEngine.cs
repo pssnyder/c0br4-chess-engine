@@ -114,7 +114,7 @@ namespace C0BR4ChessEngine.UCI
         private void HandleUCI()
         {
             Console.WriteLine($"id name C0BR4 {engineVersion}");
-            Console.WriteLine("id author Chess AI Developer");
+            Console.WriteLine("id author C0BR4 Developer");
             // TODO: Add UCI options here
             Console.WriteLine("uciok");
         }
