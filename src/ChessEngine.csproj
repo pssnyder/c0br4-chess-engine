@@ -5,13 +5,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>ChessAI_v1.2</AssemblyName>
+    <AssemblyName>ChessAI_v2.0</AssemblyName>
     <RootNamespace>ChessEngine</RootNamespace>
-    <AssemblyVersion>1.2.0.0</AssemblyVersion>
-    <FileVersion>1.2.0.0</FileVersion>
-    <Version>1.2.0</Version>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Version>2.0.0</Version>
     <Authors>Chess AI Project</Authors>
-    <Description>UCI Chess Engine with Enhanced Evaluation (Rook Coordination, King Safety, King Endgame, Castling Incentive)</Description>
+    <Description>UCI Chess Engine with Opening Book (London System, Vienna Gambit, Caro-Kann, Dutch Defense)</Description>
     <Copyright>2025</Copyright>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>

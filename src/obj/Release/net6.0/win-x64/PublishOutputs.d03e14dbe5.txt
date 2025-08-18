@@ -1,0 +1,2 @@
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\v2.0\VERSION
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\v2.0\ChessAI_v2.0.exe

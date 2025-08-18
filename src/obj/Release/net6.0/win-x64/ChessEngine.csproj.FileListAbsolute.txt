@@ -227,10 +227,10 @@ S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.
 S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\win-x64\ChessEngine.csproj.CoreCompileInputs.cache
 S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\win-x64\ChessEng.196DE297.Up2Date
 S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\win-x64\ChessEngine.genruntimeconfig.cache
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\win-x64\ChessAI_v1.2.exe
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\win-x64\ChessAI_v1.2.deps.json
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\win-x64\ChessAI_v1.2.runtimeconfig.json
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\win-x64\ChessAI_v1.2.dll
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\win-x64\ChessAI_v1.2.dll
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\win-x64\refint\ChessAI_v1.2.dll
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\win-x64\ref\ChessAI_v1.2.dll
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\win-x64\ChessAI_v2.0.exe
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\win-x64\ChessAI_v2.0.deps.json
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\win-x64\ChessAI_v2.0.runtimeconfig.json
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\bin\Release\net6.0\win-x64\ChessAI_v2.0.dll
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\win-x64\ChessAI_v2.0.dll
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\win-x64\refint\ChessAI_v2.0.dll
+S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\src\obj\Release\net6.0\win-x64\ref\ChessAI_v2.0.dll

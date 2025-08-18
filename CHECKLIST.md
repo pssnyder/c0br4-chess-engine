@@ -74,15 +74,14 @@ Medium Priority Backlog (Should Go)
 - ✅ **King Endgame**: favor positions with opponents king near edge or corners of board. Keep our king relatively immobile until we hit the endgame, then keep our king close to the opponent king — material weighted endgame phase. ✅ v1.2
 - ✅ **Castling Incentive**: should handle rook and king opening development, disables after castling or rights lost ✅ v1.2
 - ✅ **Castling Rights**: preservation receives a slight bonus, castling moves are highly incentivized though to prevent preparation from overriding actual castling, and king should remain on rank 1 or rank 2 until King Endgame weight kicks in. ✅ v1.2
-- [ ] **Opening book** for e4 or d4: London System, Caro-Kann, Vienna Gambit, Dutch Defense, should include a few moves (up to 5-8 moves) mainline only.
-- [ ] **Enhanced Endgame Tactics**: expand endgame piece profiles to include strategies for pawn advances, rook and queen positioning relative to opponent king ("closing the box" method), and knight/bishop coordination.
-
+- ✅ **Opening book** for e4 or d4: London System, Caro-Kann, Vienna Gambit, Dutch Defense, should include a few moves (up to 5-8 moves) mainline only. ✅ v2.0
 
 Low Priority Backlog
 --------------------
-
+- [ ] Enhanced Endgame Tactics: expand endgame piece profiles to include strategies for pawn advances, rook and queen positioning relative to opponent king ("closing the box" method), and knight/bishop coordination.
 - [ ] Robust UCI options support — implement `setoption` and expose parameters like search depth, time, nodes, nodes/sec, value, mainline.
 - [ ] Add perft function for move-generation verification.
+- [ ] Enhanced opening book: expand to include more of the most popular "first moves" for white, and "best defenses" for black.
 
 
 Parking Lot / Future Ideas

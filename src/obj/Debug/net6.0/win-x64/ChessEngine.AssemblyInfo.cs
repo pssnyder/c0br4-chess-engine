@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute("UCI Chess Engine with Enhanced Evaluation (Rook Coordination, King Safety, King E" +
     "ndgame, Castling Incentive)")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.2.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2.0+6975e3ee223e3edff1ffdc7eff52e6abf7edf624")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2.0+1cf886cdee86b551d48c256d3bd27968f23241f0")]
 [assembly: System.Reflection.AssemblyProductAttribute("ChessAI_v1.2")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ChessAI_v1.2")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.2.0.0")]

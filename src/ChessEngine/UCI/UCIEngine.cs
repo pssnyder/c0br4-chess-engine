@@ -5,6 +5,7 @@ using ChessEngine.Core;
 using ChessEngine.Search;
 using ChessEngine.Testing;
 using ChessEngine.Evaluation;
+using ChessEngine.Opening;
 
 namespace ChessEngine.UCI
 {
@@ -211,6 +212,26 @@ namespace ChessEngine.UCI
             // Start search with time limit
             try
             {
+                // Check opening book first
+                string? bookMove = OpeningBook.GetOpeningMove(board);
+                
+                if (bookMove != null && OpeningBook.IsInOpeningPhase(board))
+                {
+                    // Try to parse and play the book move
+                    var move = AlgebraicNotation.ParseMove(board, bookMove);
+                    
+                    if (move != null)
+                    {
+                        Console.WriteLine($"info string Opening book: {bookMove}");
+                        Console.WriteLine($"bestmove {move}");
+                        return;
+                    }
+                    
+                    // If book move not found in legal moves, fall through to search
+                    Console.WriteLine($"info string Book move {bookMove} not found, using search");
+                }
+                
+                // Fall back to engine search
                 var timeSpan = TimeSpan.FromMilliseconds(timeAllocation);
                 Move bestMove = bot.Think(board, timeSpan);
                 Console.WriteLine($"bestmove {bestMove}");
