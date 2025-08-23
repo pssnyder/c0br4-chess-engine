@@ -84,7 +84,14 @@ namespace C0BR4ChessEngine.Core
 
         public override string ToString()
         {
-            if (IsNull) return "null";
+            if (IsNull) return "(none)";
+            
+            // Validate square indices
+            if (StartSquare.Index < 0 || StartSquare.Index > 63 ||
+                TargetSquare.Index < 0 || TargetSquare.Index > 63)
+            {
+                return "(none)"; // Invalid square indices
+            }
             
             string result = $"{StartSquare.Name}{TargetSquare.Name}";
             if (IsPromotion)

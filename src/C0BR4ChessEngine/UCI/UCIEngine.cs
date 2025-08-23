@@ -105,6 +105,16 @@ namespace C0BR4ChessEngine.UCI
                 case "debug":
                     IllegalMoveDebugger.AnalyzePosition(board);
                     break;
+                case "test":
+                case "validate":
+                    TestPosition();
+                    break;
+                case "testmove":
+                    TestSpecificMove(parts);
+                    break;
+                case "testall":
+                    MoveValidationTester.RunComprehensiveTests();
+                    break;
                 default:
                     // Unknown command - ignore in UCI mode
                     break;
@@ -234,12 +244,65 @@ namespace C0BR4ChessEngine.UCI
                 // Fall back to engine search
                 var timeSpan = TimeSpan.FromMilliseconds(timeAllocation);
                 Move bestMove = bot.Think(board, timeSpan);
+                
+                // Check if we got a valid move
+                if (bestMove.IsNull || !IsValidMove(bestMove))
+                {
+                    Console.WriteLine($"info string Warning: Got invalid move {bestMove}, searching for any legal move");
+                    var legalMoves = board.GetLegalMoves();
+                    if (legalMoves.Length > 0)
+                    {
+                        bestMove = legalMoves[0]; // Take any legal move as fallback
+                        Console.WriteLine($"info string Using fallback move: {bestMove}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("bestmove (none)"); // No legal moves available
+                        return;
+                    }
+                }
+                
                 Console.WriteLine($"bestmove {bestMove}");
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"info string Error: {ex.Message}");
-                Console.WriteLine("bestmove 0000"); // Null move
+                Console.WriteLine("bestmove (none)"); // Use proper UCI format for no move
+            }
+        }
+
+        /// <summary>
+        /// Validate that a move is legal in the current position
+        /// </summary>
+        private bool IsValidMove(Move move)
+        {
+            if (move.IsNull) return false;
+            
+            var legalMoves = board.GetLegalMoves();
+            foreach (var legalMove in legalMoves)
+            {
+                if (move.Equals(legalMove))
+                    return true;
+            }
+            return false;
+        }
+
+        private void TestPosition()
+        {
+            MoveValidationTester.TestPosition(board);
+        }
+
+        private void TestSpecificMove(string[] parts)
+        {
+            if (parts.Length > 1)
+            {
+                var move = new Move(parts[1]);
+                bool isValid = MoveValidationTester.ValidateMove(board, move);
+                Console.WriteLine($"Move {parts[1]} is {(isValid ? "VALID" : "INVALID")}");
+            }
+            else
+            {
+                Console.WriteLine("Usage: testmove <move> (e.g., testmove e2e4)");
             }
         }
 

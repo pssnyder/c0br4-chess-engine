@@ -23,7 +23,7 @@ namespace C0BR4ChessEngine.Core
         /// <summary>
         /// The algebraic name of the square, e.g. "e4"
         /// </summary>
-        public string Name => BoardHelper.SquareNameFromIndex(Index);
+        public string Name => (Index >= 0 && Index <= 63) ? BoardHelper.SquareNameFromIndex(Index) : "invalid";
 
         /// <summary>
         /// Create a square from its algebraic name, e.g. "e4"

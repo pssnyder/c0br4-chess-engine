@@ -23,9 +23,24 @@ namespace C0BR4ChessEngine.Search
             quiescenceNodes = 0;
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             
+            // Safety check - ensure we have legal moves before searching
+            var legalMoves = board.GetLegalMoves();
+            if (legalMoves.Length == 0)
+            {
+                Console.WriteLine("info string No legal moves in position");
+                return Move.NullMove;
+            }
+            
             Move bestMove = SearchBestMove(board, searchDepth);
             
             stopwatch.Stop();
+            
+            // Final validation - ensure we return a legal move
+            if (bestMove.IsNull || !IsMoveLegal(board, bestMove, legalMoves))
+            {
+                Console.WriteLine($"info string Warning: Invalid best move {bestMove}, using fallback");
+                bestMove = legalMoves[0]; // Return any legal move as fallback
+            }
             
             // Get transposition table statistics
             var (ttHits, ttStores, ttEntries) = transpositionTable.GetStatistics();
@@ -40,7 +55,10 @@ namespace C0BR4ChessEngine.Search
         {
             var moves = board.GetLegalMoves();
             if (moves.Length == 0)
+            {
+                Console.WriteLine("info string No legal moves available");
                 return Move.NullMove;
+            }
 
             // Order moves for better alpha-beta pruning
             moves = MoveOrdering.OrderMoves(board, moves);
@@ -51,8 +69,8 @@ namespace C0BR4ChessEngine.Search
             // Check transposition table for a previous best move to try first
             if (transpositionTable.TryGetEntry(board, depth, -50000, 50000, out var ttEntry))
             {
-                // If we have a cached best move, try it first
-                if (ttEntry.BestMove != Move.NullMove)
+                // If we have a cached best move, validate it's still legal before using
+                if (ttEntry.BestMove != Move.NullMove && IsMoveLegal(board, ttEntry.BestMove, moves))
                 {
                     // Move the TT best move to the front of the list
                     for (int i = 0; i < moves.Length; i++)
@@ -84,6 +102,19 @@ namespace C0BR4ChessEngine.Search
 
             Console.WriteLine($"info score cp {bestScore} pv {bestMove}");
             return bestMove;
+        }
+
+        /// <summary>
+        /// Check if a move from transposition table is still legal in current position
+        /// </summary>
+        private bool IsMoveLegal(Board board, Move move, Move[] legalMoves)
+        {
+            foreach (var legalMove in legalMoves)
+            {
+                if (move.Equals(legalMove))
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -134,7 +165,7 @@ namespace C0BR4ChessEngine.Search
             moves = MoveOrdering.OrderMoves(board, moves);
 
             // If we have a cached best move from TT, try it first
-            if (ttEntry.BestMove != Move.NullMove)
+            if (ttEntry.BestMove != Move.NullMove && IsMoveLegal(board, ttEntry.BestMove, moves))
             {
                 for (int i = 0; i < moves.Length; i++)
                 {

@@ -19,9 +19,24 @@ namespace C0BR4ChessEngine.Search
             nodesSearched = 0;
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             
+            // Safety check - ensure we have legal moves before searching
+            var legalMoves = board.GetLegalMoves();
+            if (legalMoves.Length == 0)
+            {
+                Console.WriteLine("info string No legal moves in position");
+                return Move.NullMove;
+            }
+            
             Move bestMove = SearchBestMove(board, searchDepth);
             
             stopwatch.Stop();
+            
+            // Final validation - ensure we return a legal move
+            if (bestMove.IsNull || !IsMoveLegal(board, bestMove, legalMoves))
+            {
+                Console.WriteLine($"info string Warning: Invalid best move {bestMove}, using fallback");
+                bestMove = legalMoves[0]; // Return any legal move as fallback
+            }
             
             // Report search statistics
             Console.WriteLine($"info depth {searchDepth} nodes {nodesSearched} time {stopwatch.ElapsedMilliseconds} nps {(long)(nodesSearched / Math.Max(stopwatch.Elapsed.TotalSeconds, 0.001))}");
@@ -29,11 +44,27 @@ namespace C0BR4ChessEngine.Search
             return bestMove;
         }
 
+        /// <summary>
+        /// Check if a move is legal in current position
+        /// </summary>
+        private bool IsMoveLegal(Board board, Move move, Move[] legalMoves)
+        {
+            foreach (var legalMove in legalMoves)
+            {
+                if (move.Equals(legalMove))
+                    return true;
+            }
+            return false;
+        }
+
         private Move SearchBestMove(Board board, int depth)
         {
             var moves = board.GetLegalMoves();
             if (moves.Length == 0)
+            {
+                Console.WriteLine("info string No legal moves available");
                 return Move.NullMove;
+            }
 
             Move bestMove = moves[0];
             int bestScore = -50000; // Start with very low score
