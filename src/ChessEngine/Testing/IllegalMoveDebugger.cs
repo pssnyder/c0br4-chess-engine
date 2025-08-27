@@ -1,10 +1,14 @@
 using System;
+using System.IO;
+using System.Linq;
 using ChessEngine.Core;
 
 namespace ChessEngine.Testing
 {
     public static class IllegalMoveDebugger
     {
+        private static readonly string LogFile = "illegal_moves.log";
+        
         public static void AnalyzePosition(Board board)
         {
             Console.WriteLine("=== ILLEGAL MOVE ANALYSIS ===");
@@ -53,6 +57,93 @@ namespace ChessEngine.Testing
             }
             
             Console.WriteLine("=== END ANALYSIS ===");
+        }
+        
+        public static void LogIllegalMoveAttempt(Board board, Move move, string reason)
+        {
+            var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            var fenPosition = board.GetFEN();
+            var logMessage = $"[{timestamp}] ILLEGAL MOVE VALIDATION FAILED: {move} - Reason: {reason} - FEN: {fenPosition}";
+            
+            Console.WriteLine(logMessage);
+            LogToFile(logMessage);
+        }
+        
+        public static void LogUnknownMoveAttempt(Board board, string moveString)
+        {
+            var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            var fenPosition = board.GetFEN();
+            var legalMoves = board.GetLegalMoves();
+            var legalMovesStr = string.Join(", ", legalMoves);
+            
+            var logMessage = $"[{timestamp}] UNKNOWN MOVE ATTEMPT: {moveString} - FEN: {fenPosition} - Legal moves: {legalMovesStr}";
+            
+            Console.WriteLine(logMessage);
+            LogToFile(logMessage);
+        }
+        
+        public static void LogMoveException(Board board, string moveString, Exception ex)
+        {
+            var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            var fenPosition = board.GetFEN();
+            var logMessage = $"[{timestamp}] MOVE EXCEPTION: {moveString} - Exception: {ex.Message} - FEN: {fenPosition} - Stack: {ex.StackTrace}";
+            
+            Console.WriteLine(logMessage);
+            LogToFile(logMessage);
+        }
+        
+        public static void LogBoardStateAnalysis(Board board, string context = "")
+        {
+            var timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            var fenPosition = board.GetFEN();
+            var legalMoves = board.GetLegalMoves();
+            var moveCount = legalMoves.Length;
+            
+            var logMessage = $"[{timestamp}] BOARD STATE ANALYSIS {context}: FEN: {fenPosition} - Legal moves: {moveCount} - To move: {(board.IsWhiteToMove ? "White" : "Black")}";
+            
+            Console.WriteLine(logMessage);
+            LogToFile(logMessage);
+            
+            // Log first few legal moves for context
+            if (moveCount > 0)
+            {
+                var moveStrings = new string[Math.Min(10, moveCount)];
+                for (int i = 0; i < moveStrings.Length; i++)
+                {
+                    moveStrings[i] = legalMoves[i].ToString();
+                }
+                var firstMoves = string.Join(", ", moveStrings);
+                var movesMessage = $"[{timestamp}] First 10 legal moves: {firstMoves}";
+                Console.WriteLine(movesMessage);
+                LogToFile(movesMessage);
+            }
+        }
+        
+        private static void LogToFile(string message)
+        {
+            try
+            {
+                File.AppendAllText(LogFile, message + Environment.NewLine);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to write to log file: {ex.Message}");
+            }
+        }
+        
+        public static void ClearLogFile()
+        {
+            try
+            {
+                if (File.Exists(LogFile))
+                {
+                    File.Delete(LogFile);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to clear log file: {ex.Message}");
+            }
         }
     }
 }

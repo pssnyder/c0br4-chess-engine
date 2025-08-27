@@ -298,14 +298,29 @@ namespace ChessEngine.UCI
                 {
                     if (legalMove.ToString() == moveString)
                     {
+                        // Use MoveValidator for additional verification
+                        var validationResult = MoveValidator.ValidateMove(board, legalMove);
+                        if (!validationResult.IsValid)
+                        {
+                            Console.WriteLine($"ERROR: Move {moveString} failed validation: {validationResult.ErrorMessage}");
+                            IllegalMoveDebugger.LogIllegalMoveAttempt(board, legalMove, validationResult.ErrorMessage);
+                            return false;
+                        }
+                        
                         board.MakeMove(legalMove);
                         return true;
                     }
                 }
+                
+                // If we get here, the move wasn't found in legal moves
+                Console.WriteLine($"ERROR: Move {moveString} is not in the list of legal moves");
+                IllegalMoveDebugger.LogUnknownMoveAttempt(board, moveString);
                 return false;
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"ERROR: Exception while parsing move {moveString}: {ex.Message}");
+                IllegalMoveDebugger.LogMoveException(board, moveString, ex);
                 return false;
             }
         }
