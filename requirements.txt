@@ -1,4 +1,4 @@
-# ChessAI Engine Requirements
+# C0BR4 Engine Requirements
 
 ## Runtime Requirements
 
@@ -141,13 +141,13 @@ position fen rnbqkb1r/pp1p1ppp/5n2/2p1p3/2B1P3/3P1N2/PPP2PPP/RNBQK2R w KQkq - 0 
 ### Performance Benchmarks
 Run automated benchmarks to verify performance:
 ```bash
-echo -e "uci\nposition fen r3k2r/p1ppqpb1/Bn2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R w KQkq - 0 1\ngo depth 4\nquit" | ./ChessAI_v0.6.exe
+echo -e "uci\nposition fen r3k2r/p1ppqpb1/Bn2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R w KQkq - 0 1\ngo depth 4\nquit" | ./C0BR4_v0.6.exe
 ```
 
 ### Engine vs Engine Testing
 Compare versions using Cute Chess CLI:
 ```bash
-cutechess-cli -engine cmd=./dist/v0.5/ChessAI_v0.5.exe -engine cmd=./dist/v0.6/ChessAI_v0.6.exe -each tc=10+0.1 -games 100
+cutechess-cli -engine cmd=./dist/v0.5/C0BR4_v0.5.exe -engine cmd=./dist/v0.6/C0BR4_v0.6.exe -each tc=10+0.1 -games 100
 ```
 
 ## Known Limitations
