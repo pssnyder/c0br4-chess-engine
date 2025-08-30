@@ -350,8 +350,90 @@ namespace C0BR4ChessEngine.Core
         /// </summary>
         public string GetFEN()
         {
-            // TODO: Implement FEN generation
-            throw new NotImplementedException("FEN generation not yet implemented");
+            var fen = new System.Text.StringBuilder();
+            
+            // 1. Piece placement
+            for (int rank = 7; rank >= 0; rank--)
+            {
+                int emptySquares = 0;
+                for (int file = 0; file < 8; file++)
+                {
+                    int squareIndex = rank * 8 + file;
+                    var piece = GetPiece(new Square(squareIndex));
+                    
+                    if (piece.IsNull)
+                    {
+                        emptySquares++;
+                    }
+                    else
+                    {
+                        if (emptySquares > 0)
+                        {
+                            fen.Append(emptySquares);
+                            emptySquares = 0;
+                        }
+                        
+                        char pieceChar = piece.PieceType switch
+                        {
+                            PieceType.Pawn => 'p',
+                            PieceType.Rook => 'r',
+                            PieceType.Knight => 'n',
+                            PieceType.Bishop => 'b',
+                            PieceType.Queen => 'q',
+                            PieceType.King => 'k',
+                            _ => '?'
+                        };
+                        
+                        if (piece.IsWhite)
+                        {
+                            pieceChar = char.ToUpper(pieceChar);
+                        }
+                        
+                        fen.Append(pieceChar);
+                    }
+                }
+                
+                if (emptySquares > 0)
+                {
+                    fen.Append(emptySquares);
+                }
+                
+                if (rank > 0)
+                {
+                    fen.Append('/');
+                }
+            }
+            
+            // 2. Active color
+            fen.Append(' ');
+            fen.Append(IsWhiteToMove ? 'w' : 'b');
+            
+            // 3. Castling availability (simplified - just use stored flags)
+            fen.Append(' ');
+            var castling = "";
+            if (whiteCanCastleKingside) castling += "K";
+            if (whiteCanCastleQueenside) castling += "Q";
+            if (blackCanCastleKingside) castling += "k";
+            if (blackCanCastleQueenside) castling += "q";
+            fen.Append(castling == "" ? "-" : castling);
+            
+            // 4. En passant target square
+            fen.Append(' ');
+            if (enPassantSquare == -1)
+            {
+                fen.Append('-');
+            }
+            else
+            {
+                char file = (char)('a' + (enPassantSquare % 8));
+                int rank = (enPassantSquare / 8) + 1;
+                fen.Append($"{file}{rank}");
+            }
+            
+            // 5. Halfmove clock and fullmove number (simplified)
+            fen.Append(" 0 1");
+            
+            return fen.ToString();
         }
     }
 }

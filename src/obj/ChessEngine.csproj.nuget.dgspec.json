@@ -1,6 +1,17 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
+    "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\ChessEngine.csproj": {}
+  },
+  "projects": {
+    "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\ChessEngine.csproj": {
+      "version": "2.0.0",
+      "restore": {
+        "projectUniqueName": "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\ChessEngine.csproj",
+        "projectName": "ChessAI_v2.0",
+        "projectPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\ChessEngine.csproj",
+=======
     "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\C0BR4ChessEngine.csproj": {}
   },
   "projects": {
@@ -10,8 +21,9 @@
         "projectUniqueName": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\C0BR4ChessEngine.csproj",
         "projectName": "C0BR4_v2.0",
         "projectPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\C0BR4ChessEngine.csproj",
+>>>>>>> origin/main
         "packagesPath": "C:\\Users\\patss\\.nuget\\packages\\",
-        "outputPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\Chess AI\\chess-ai\\src\\obj\\",
+        "outputPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\patss\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -102,7 +114,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.315\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.316\\RuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {

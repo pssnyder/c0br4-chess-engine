@@ -1,8 +1,14 @@
 {
   "version": 2,
+<<<<<<< HEAD
+  "dgSpecHash": "z3oTqIDRRNM=",
+  "success": true,
+  "projectFilePath": "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\ChessEngine.csproj",
+=======
   "dgSpecHash": "8lQ2bIWnBVU=",
   "success": true,
   "projectFilePath": "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj",
+>>>>>>> origin/main
   "expectedPackageFiles": [
     "C:\\Users\\patss\\.nuget\\packages\\microsoft.net.illink.analyzers\\7.0.100-1.23401.1\\microsoft.net.illink.analyzers.7.0.100-1.23401.1.nupkg.sha512",
     "C:\\Users\\patss\\.nuget\\packages\\microsoft.net.illink.tasks\\7.0.100-1.23401.1\\microsoft.net.illink.tasks.7.0.100-1.23401.1.nupkg.sha512",
