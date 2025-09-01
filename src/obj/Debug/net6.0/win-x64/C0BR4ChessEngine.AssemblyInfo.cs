@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute("C0BR4 UCI Chess Engine with Opening Book (London System, Vienna Gambit, Caro-Kann" +
     ", Dutch Defense)")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("2.5.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.5.0+dd6a354a3b3284ee9b51b8f2d7abeff2a69f10ba")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.5.0+b48842f28e01764db92e04f709307ee81a2668d2")]
 [assembly: System.Reflection.AssemblyProductAttribute("C0BR4_v2.5")]
 [assembly: System.Reflection.AssemblyTitleAttribute("C0BR4_v2.5")]
 [assembly: System.Reflection.AssemblyVersionAttribute("2.5.0.0")]
