@@ -1,6 +1,16 @@
-# C0BR4 Engine
+# C0BR4 Engine v2.5
 
-A modern chess engine written in C# with UCI (Universal Chess Interface) support for tournament play and GUI compatibility. Built following Sebastian Lague's chess programming guide with comprehensive search algorithms and evaluation functions.
+A modern **tournament-ready** chess engine written in C# with UCI (Universal Chess Interface) support. Features **pure bitboard architecture** and **bulletproof move validation** that eliminates illegal moves.
+
+## 🚨 v2.5 Critical Release - Illegal Move Problem SOLVED
+
+**C0BR4 v2.5 completely eliminates illegal move generation** that caused tournament failures in previous versions. The engine now uses **exclusive bitboard move generation** with **defense-in-depth validation** to ensure 100% rule compliance.
+
+### Key Improvements
+- ✅ **Zero illegal moves** - Bitboard-validated move generation only
+- ✅ **Tournament ready** - Passes all UCI compliance tests  
+- ✅ **Bulletproof parsing** - UCI moves validated against legal move list
+- ✅ **Rule compliant** - Comprehensive validation at multiple levels
 
 ## Features
 

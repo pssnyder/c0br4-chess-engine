@@ -18,32 +18,16 @@ namespace C0BR4ChessEngine.UCI
         private Board board = new();
         private IChessBot bot = new TranspositionSearchBot(); // v0.6: Alpha-beta with move ordering, quiescence, and transposition table
         private bool isRunning = true;
-        private string engineVersion;
+        private const string EngineVersion = "v2.5";
 
         public UCIEngine()
         {
-            // Read version from VERSION file
-            try
-            {
-                string versionPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "VERSION");
-                if (File.Exists(versionPath))
-                {
-                    engineVersion = File.ReadAllText(versionPath).Trim();
-                }
-                else
-                {
-                    engineVersion = "dev"; // Default for development
-                }
-            }
-            catch
-            {
-                engineVersion = "unknown";
-            }
+            // Version is now hardcoded - no external file dependency
         }
 
         public void Run()
         {
-            Console.WriteLine($"C0BR4 {engineVersion}");
+            Console.WriteLine($"C0BR4 {EngineVersion}");
             
             while (isRunning)
             {
@@ -103,7 +87,7 @@ namespace C0BR4ChessEngine.UCI
                     SetEngine(parts);
                     break;
                 case "debug":
-                    IllegalMoveDebugger.AnalyzePosition(board);
+                    DebugPosition();
                     break;
                 case "test":
                 case "validate":
@@ -113,7 +97,7 @@ namespace C0BR4ChessEngine.UCI
                     TestSpecificMove(parts);
                     break;
                 case "testall":
-                    MoveValidationTester.RunComprehensiveTests();
+                    RunBitboardValidationTests();
                     break;
                 default:
                     // Unknown command - ignore in UCI mode
@@ -123,7 +107,7 @@ namespace C0BR4ChessEngine.UCI
 
         private void HandleUCI()
         {
-            Console.WriteLine($"id name C0BR4 {engineVersion}");
+            Console.WriteLine($"id name C0BR4 {EngineVersion}");
             Console.WriteLine("id author C0BR4 Developer");
             // TODO: Add UCI options here
             Console.WriteLine("uciok");
@@ -272,33 +256,108 @@ namespace C0BR4ChessEngine.UCI
         }
 
         /// <summary>
-        /// Validate that a move is legal in the current position
+        /// Validate that a move is legal in the current position using bitboard validation
         /// </summary>
         private bool IsValidMove(Move move)
         {
             if (move.IsNull) return false;
             
+            // Use our bitboard-based validation - this is the key fix!
+            return board.IsLegalMove(move);
+        }
+
+        private void DebugPosition()
+        {
+            Console.WriteLine("=== POSITION DEBUG ===");
+            Console.WriteLine($"FEN: {board.GetFEN()}");
+            Console.WriteLine($"Turn: {(board.IsWhiteToMove ? "White" : "Black")}");
+            
             var legalMoves = board.GetLegalMoves();
-            foreach (var legalMove in legalMoves)
+            Console.WriteLine($"Legal moves ({legalMoves.Length}):");
+            for (int i = 0; i < Math.Min(20, legalMoves.Length); i++)
             {
-                if (move.Equals(legalMove))
-                    return true;
+                Console.WriteLine($"  {legalMoves[i]}");
             }
-            return false;
+            if (legalMoves.Length > 20)
+            {
+                Console.WriteLine($"  ... and {legalMoves.Length - 20} more");
+            }
+        }
+
+        private void RunBitboardValidationTests()
+        {
+            Console.WriteLine("Running bitboard validation tests...");
+            
+            // Test current position
+            var legalMoves = board.GetLegalMoves();
+            Console.WriteLine($"Current position has {legalMoves.Length} legal moves");
+            
+            // Test each legal move
+            int validMoves = 0;
+            foreach (var move in legalMoves)
+            {
+                if (board.IsLegalMove(move))
+                {
+                    validMoves++;
+                }
+                else
+                {
+                    Console.WriteLine($"WARNING: Move {move} is in legal moves list but fails IsLegalMove check!");
+                }
+            }
+            
+            Console.WriteLine($"Validation: {validMoves}/{legalMoves.Length} moves passed IsLegalMove check");
         }
 
         private void TestPosition()
         {
-            MoveValidationTester.TestPosition(board);
+            Console.WriteLine("=== MOVE VALIDATION TEST ===");
+            var legalMoves = board.GetLegalMoves();
+            Console.WriteLine($"Position has {legalMoves.Length} legal moves");
+            
+            // Test a few moves
+            for (int i = 0; i < Math.Min(5, legalMoves.Length); i++)
+            {
+                var move = legalMoves[i];
+                bool isValid = board.IsLegalMove(move);
+                Console.WriteLine($"Move {move}: {(isValid ? "VALID" : "INVALID")}");
+            }
         }
 
         private void TestSpecificMove(string[] parts)
         {
             if (parts.Length > 1)
             {
-                var move = new Move(parts[1]);
-                bool isValid = MoveValidationTester.ValidateMove(board, move);
-                Console.WriteLine($"Move {parts[1]} is {(isValid ? "VALID" : "INVALID")}");
+                try
+                {
+                    // CRITICAL FIX: Use ParseUciMove instead of Move constructor
+                    var move = ParseUciMove(parts[1]);
+                    if (move == null)
+                    {
+                        Console.WriteLine($"Move {parts[1]} is INVALID (not found in legal moves)");
+                        return;
+                    }
+                    
+                    bool isValid = board.IsLegalMove(move.Value);
+                    Console.WriteLine($"Move {parts[1]} is {(isValid ? "VALID" : "INVALID")}");
+                    
+                    // Also check if it's in the legal moves list
+                    var legalMoves = board.GetLegalMoves();
+                    bool inLegalList = false;
+                    foreach (var legalMove in legalMoves)
+                    {
+                        if (move.Value.Equals(legalMove))
+                        {
+                            inLegalList = true;
+                            break;
+                        }
+                    }
+                    Console.WriteLine($"Move {parts[1]} is {(inLegalList ? "in" : "NOT in")} legal moves list");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error parsing move {parts[1]}: {ex.Message}");
+                }
             }
             else
             {
@@ -355,37 +414,113 @@ namespace C0BR4ChessEngine.UCI
         {
             try
             {
-                // Find the matching legal move
-                var legalMoves = board.GetLegalMoves();
-                foreach (var legalMove in legalMoves)
+                // Parse UCI move with proper board context
+                var move = ParseUciMove(moveString);
+                
+                if (move == null)
                 {
-                    if (legalMove.ToString() == moveString)
-                    {
-                        // Use MoveValidator for additional verification
-                        var validationResult = MoveValidator.ValidateMove(board, legalMove);
-                        if (!validationResult.IsValid)
-                        {
-                            Console.WriteLine($"ERROR: Move {moveString} failed validation: {validationResult.ErrorMessage}");
-                            IllegalMoveDebugger.LogIllegalMoveAttempt(board, legalMove, validationResult.ErrorMessage);
-                            return false;
-                        }
-                        
-                        board.MakeMove(legalMove);
-                        return true;
-                    }
+                    Console.WriteLine($"ERROR: Could not parse UCI move {moveString}");
+                    return false;
                 }
                 
-                // If we get here, the move wasn't found in legal moves
-                Console.WriteLine($"ERROR: Move {moveString} is not in the list of legal moves");
-                IllegalMoveDebugger.LogUnknownMoveAttempt(board, moveString);
-                return false;
+                // Use bitboard-based validation - this is our critical fix!
+                if (!board.IsLegalMove(move.Value))
+                {
+                    Console.WriteLine($"ERROR: Move {moveString} is not legal in current position");
+                    return false;
+                }
+                
+                // Make the move using bitboard system
+                board.MakeMove(move.Value);
+                return true;
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"ERROR: Exception while parsing move {moveString}: {ex.Message}");
-                IllegalMoveDebugger.LogMoveException(board, moveString, ex);
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Parse a UCI move string (like "e2e4", "e1g1", "e7e8q") into a proper Move object
+        /// with full board context including piece types and move flags
+        /// </summary>
+        private Move? ParseUciMove(string uciMove)
+        {
+            if (string.IsNullOrEmpty(uciMove) || uciMove.Length < 4)
+                return null;
+
+            try
+            {
+                // Parse source and target squares
+                string fromSquare = uciMove.Substring(0, 2);
+                string toSquare = uciMove.Substring(2, 2);
+                
+                int fromIndex = ParseSquareIndex(fromSquare);
+                int toIndex = ParseSquareIndex(toSquare);
+                
+                if (fromIndex < 0 || toIndex < 0)
+                    return null;
+
+                // Get all legal moves and find the matching one
+                var legalMoves = board.GetLegalMoves();
+                
+                foreach (var legalMove in legalMoves)
+                {
+                    if (legalMove.StartSquare.Index == fromIndex && 
+                        legalMove.TargetSquare.Index == toIndex)
+                    {
+                        // Check for promotion
+                        if (uciMove.Length == 5)
+                        {
+                            PieceType promotionType = uciMove[4] switch
+                            {
+                                'q' => PieceType.Queen,
+                                'r' => PieceType.Rook,
+                                'b' => PieceType.Bishop,
+                                'n' => PieceType.Knight,
+                                _ => PieceType.None
+                            };
+                            
+                            // Only return if promotion piece matches
+                            if (legalMove.PromotionPieceType == promotionType)
+                                return legalMove;
+                        }
+                        else
+                        {
+                            // No promotion, so this should be a non-promotion move
+                            if (legalMove.PromotionPieceType == PieceType.None)
+                                return legalMove;
+                        }
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Parse a square string like "e4" into a square index (0-63)
+        /// </summary>
+        private int ParseSquareIndex(string square)
+        {
+            if (string.IsNullOrEmpty(square) || square.Length != 2)
+                return -1;
+
+            char file = square[0];
+            char rank = square[1];
+
+            if (file < 'a' || file > 'h' || rank < '1' || rank > '8')
+                return -1;
+
+            int fileIndex = file - 'a';
+            int rankIndex = rank - '1';
+            
+            return rankIndex * 8 + fileIndex;
         }
 
         private void RunEval()

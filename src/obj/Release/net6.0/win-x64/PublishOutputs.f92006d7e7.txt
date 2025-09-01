@@ -1,2 +1,0 @@
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\v1.1\VERSION
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\v1.1\C0BR4_v1.1.exe

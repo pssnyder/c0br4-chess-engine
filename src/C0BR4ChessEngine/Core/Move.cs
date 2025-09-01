@@ -48,8 +48,12 @@ namespace C0BR4ChessEngine.Core
         }
 
         /// <summary>
-        /// Create a move from UCI notation, for example: "e2e4"
+        /// [DEPRECATED] Create a move from UCI notation, for example: "e2e4"
+        /// WARNING: This constructor creates incomplete moves without board context!
+        /// Use Board.FindLegalMove() or UCI ParseUciMove() instead for proper move creation.
+        /// This method should only be used for testing/debugging purposes.
         /// </summary>
+        [Obsolete("Use Board.FindLegalMove() or ParseUciMove() instead - this creates incomplete moves")]
         public Move(string moveString)
         {
             if (moveString.Length < 4)

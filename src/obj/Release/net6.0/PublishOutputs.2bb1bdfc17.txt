@@ -1,5 +1,0 @@
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\v0.0\C0BR4_v0.0.exe
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\v0.0\VERSION
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\v0.0\C0BR4_v0.0.dll
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\v0.0\C0BR4_v0.0.deps.json
-S:\Maker Stuff\Programming\Chess Engines\Chess AI\chess-ai\dist\v0.0\C0BR4_v0.0.runtimeconfig.json

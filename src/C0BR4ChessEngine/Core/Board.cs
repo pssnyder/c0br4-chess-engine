@@ -4,57 +4,41 @@ using System.Collections.Generic;
 namespace C0BR4ChessEngine.Core
 {
     /// <summary>
-    /// Board state for undo operations
+    /// Board state for undo operations - updated for bitboard compatibility
     /// </summary>
     public struct BoardState
     {
-        public bool IsWhiteToMove;
-        public int HalfMoveClock;
-        public int FullMoveNumber;
-        public bool WhiteCanCastleKingside;
-        public bool WhiteCanCastleQueenside;
-        public bool BlackCanCastleKingside;
-        public bool BlackCanCastleQueenside;
-        public int EnPassantSquare;
-        public Piece CapturedPiece;
+        public BitboardPosition Position;
         public Move LastMove;
-        public Piece[] PreviousBoardState; // Copy of board state
+        public Piece CapturedPiece;
     }
 
     /// <summary>
-    /// Simplified board representation for our chess engine
-    /// This will be expanded as we add more functionality
+    /// Board representation that internally uses bitboards for efficiency and accuracy
+    /// Maintains compatibility with existing UCI interface while using fast bitboard operations
     /// </summary>
     public class Board
     {
-        private Piece[] squares = new Piece[64];
-        private bool isWhiteToMove = true;
-        private int fullMoveNumber = 1;
-        private int halfMoveClock = 0;
+        // Internal bitboard representation
+        private BitboardPosition position;
+        private BitboardMoveGenerator moveGenerator;
         
-        // Castling rights
-        private bool whiteCanCastleKingside = true;
-        private bool whiteCanCastleQueenside = true;
-        private bool blackCanCastleKingside = true;
-        private bool blackCanCastleQueenside = true;
-        
-        // En passant
-        private int enPassantSquare = -1;
-
         // Move history for undo operations
         private Stack<BoardState> stateHistory = new();
 
-        public bool IsWhiteToMove => isWhiteToMove;
-        public int FullMoveNumber => fullMoveNumber;
-        public int HalfMoveClock => halfMoveClock;
+        public bool IsWhiteToMove => position.IsWhiteToMove;
+        public int FullMoveNumber => position.FullMoveNumber;
+        public int HalfMoveClock => position.HalfMoveClock;
 
         public Board()
         {
+            moveGenerator = new BitboardMoveGenerator();
             LoadStartPosition();
         }
 
         public Board(string fen)
         {
+            moveGenerator = new BitboardMoveGenerator();
             LoadPosition(fen);
         }
 
@@ -71,78 +55,26 @@ namespace C0BR4ChessEngine.Core
         /// </summary>
         public void LoadPosition(string fen)
         {
-            string[] parts = fen.Split(' ');
-            if (parts.Length != 6) 
-                throw new ArgumentException("Invalid FEN string");
-
-            // Clear board
-            Array.Fill(squares, new Piece(PieceType.None, true, new Square(0)));
-
-            // Parse piece placement
-            string[] ranks = parts[0].Split('/');
-            for (int rank = 0; rank < 8; rank++)
-            {
-                int file = 0;
-                foreach (char c in ranks[7 - rank]) // FEN starts from rank 8
-                {
-                    if (char.IsDigit(c))
-                    {
-                        file += c - '0'; // Skip empty squares
-                    }
-                    else
-                    {
-                        bool isWhite = char.IsUpper(c);
-                        PieceType pieceType = char.ToLower(c) switch
-                        {
-                            'p' => PieceType.Pawn,
-                            'n' => PieceType.Knight,
-                            'b' => PieceType.Bishop,
-                            'r' => PieceType.Rook,
-                            'q' => PieceType.Queen,
-                            'k' => PieceType.King,
-                            _ => PieceType.None
-                        };
-                        
-                        Square square = new Square(file, rank);
-                        squares[square.Index] = new Piece(pieceType, isWhite, square);
-                        file++;
-                    }
-                }
-            }
-
-            // Parse active color
-            isWhiteToMove = parts[1] == "w";
-
-            // Parse castling availability
-            string castling = parts[2];
-            whiteCanCastleKingside = castling.Contains('K');
-            whiteCanCastleQueenside = castling.Contains('Q');
-            blackCanCastleKingside = castling.Contains('k');
-            blackCanCastleQueenside = castling.Contains('q');
-
-            // Parse en passant target square
-            enPassantSquare = parts[3] == "-" ? -1 : BoardHelper.SquareIndexFromName(parts[3]);
-
-            // Parse halfmove clock and fullmove number
-            halfMoveClock = int.Parse(parts[4]);
-            fullMoveNumber = int.Parse(parts[5]);
+            position = BitboardPosition.FromFEN(fen);
+            stateHistory.Clear();
         }
 
         /// <summary>
-        /// Get the piece on a square
+        /// Get the piece on a square (for backward compatibility)
         /// </summary>
         public Piece GetPiece(Square square)
         {
-            return squares[square.Index];
+            var (pieceType, isWhite) = position.GetPieceAt(square.Index);
+            return new Piece(pieceType, isWhite, square);
         }
 
         /// <summary>
         /// Generate all legal moves for the current position
+        /// Now uses the efficient bitboard move generator
         /// </summary>
         public Move[] GetLegalMoves()
         {
-            var moveGenerator = new MoveGenerator(this);
-            return moveGenerator.GenerateLegalMoves();
+            return moveGenerator.GenerateLegalMoves(position);
         }
 
         /// <summary>
@@ -150,8 +82,7 @@ namespace C0BR4ChessEngine.Core
         /// </summary>
         public Move[] GetPseudoLegalMoves()
         {
-            var moveGenerator = new MoveGenerator(this);
-            return moveGenerator.GeneratePseudoLegalMoves();
+            return moveGenerator.GeneratePseudoLegalMoves(position);
         }
 
         /// <summary>
@@ -162,76 +93,14 @@ namespace C0BR4ChessEngine.Core
             // Save current state for undo
             var state = new BoardState
             {
-                IsWhiteToMove = isWhiteToMove,
-                HalfMoveClock = halfMoveClock,
-                FullMoveNumber = fullMoveNumber,
-                WhiteCanCastleKingside = whiteCanCastleKingside,
-                WhiteCanCastleQueenside = whiteCanCastleQueenside,
-                BlackCanCastleKingside = blackCanCastleKingside,
-                BlackCanCastleQueenside = blackCanCastleQueenside,
-                EnPassantSquare = enPassantSquare,
-                CapturedPiece = GetPiece(move.TargetSquare),
+                Position = position,
                 LastMove = move,
-                PreviousBoardState = (Piece[])squares.Clone() // Save board state
+                CapturedPiece = GetPiece(move.TargetSquare)
             };
             stateHistory.Push(state);
 
-            // Clear en passant square (will be set again if this move creates one)
-            enPassantSquare = -1;
-
-            // Update halfmove clock (reset on pawn move or capture)
-            if (move.MovePieceType == PieceType.Pawn || move.IsCapture)
-            {
-                halfMoveClock = 0;
-            }
-            else
-            {
-                halfMoveClock++;
-            }
-
-            // Handle special moves
-            switch (move.Flag)
-            {
-                case MoveFlag.PawnTwoForward:
-                    // Set en passant square
-                    enPassantSquare = (move.StartSquare.Index + move.TargetSquare.Index) / 2;
-                    break;
-
-                case MoveFlag.EnPassant:
-                    // Remove the captured pawn
-                    int capturedPawnSquare = isWhiteToMove ? move.TargetSquare.Index - 8 : move.TargetSquare.Index + 8;
-                    squares[capturedPawnSquare] = new Piece(PieceType.None, true, new Square(capturedPawnSquare));
-                    break;
-
-                case MoveFlag.Castling:
-                    // Move the rook for castling
-                    HandleCastlingRookMove(move);
-                    break;
-            }
-
-            // Update castling rights
-            UpdateCastlingRights(move);
-
-            // Move the piece
-            Piece movingPiece = GetPiece(move.StartSquare);
-            squares[move.StartSquare.Index] = new Piece(PieceType.None, true, move.StartSquare);
-
-            // Handle promotion
-            if (move.IsPromotion)
-            {
-                squares[move.TargetSquare.Index] = new Piece(move.PromotionPieceType, movingPiece.IsWhite, move.TargetSquare);
-            }
-            else
-            {
-                squares[move.TargetSquare.Index] = new Piece(movingPiece.PieceType, movingPiece.IsWhite, move.TargetSquare);
-            }
-
-            // Switch turns
-            isWhiteToMove = !isWhiteToMove;
-            if (isWhiteToMove) // If it's white's turn again, increment full move number
-            {
-                fullMoveNumber++;
-            }
+            // Apply the move using bitboard operations
+            ApplyMove(ref position, move);
         }
 
         /// <summary>
@@ -243,58 +112,129 @@ namespace C0BR4ChessEngine.Core
                 throw new InvalidOperationException("No moves to undo");
 
             var state = stateHistory.Pop();
-
-            // Restore complete board state
-            isWhiteToMove = state.IsWhiteToMove;
-            halfMoveClock = state.HalfMoveClock;
-            fullMoveNumber = state.FullMoveNumber;
-            whiteCanCastleKingside = state.WhiteCanCastleKingside;
-            whiteCanCastleQueenside = state.WhiteCanCastleQueenside;
-            blackCanCastleKingside = state.BlackCanCastleKingside;
-            blackCanCastleQueenside = state.BlackCanCastleQueenside;
-            enPassantSquare = state.EnPassantSquare;
-            squares = state.PreviousBoardState; // Restore board state
+            position = state.Position;
         }
 
-        private void HandleCastlingRookMove(Move move)
+        /// <summary>
+        /// Apply a move to the bitboard position
+        /// </summary>
+        private void ApplyMove(ref BitboardPosition pos, Move move)
         {
-            // TODO: Implement castling rook movement
-            // This requires determining which side is castling and moving the rook accordingly
+            int fromSquare = move.StartSquare.Index;
+            int toSquare = move.TargetSquare.Index;
+            
+            // Update halfmove clock
+            if (move.MovePieceType == PieceType.Pawn || move.IsCapture)
+            {
+                pos.HalfMoveClock = 0;
+            }
+            else
+            {
+                pos.HalfMoveClock++;
+            }
+
+            // Update en passant
+            pos.EnPassantSquare = -1; // Clear previous en passant
+
+            // Handle special moves
+            switch (move.Flag)
+            {
+                case MoveFlag.PawnTwoForward:
+                    // Set en passant square
+                    pos.EnPassantSquare = pos.IsWhiteToMove ? toSquare - 8 : toSquare + 8;
+                    break;
+
+                case MoveFlag.EnPassant:
+                    // Remove the captured pawn
+                    int capturedPawnSquare = pos.IsWhiteToMove ? toSquare - 8 : toSquare + 8;
+                    pos.RemovePiece(capturedPawnSquare);
+                    break;
+
+                case MoveFlag.Castling:
+                    // Move the rook for castling
+                    HandleCastlingRookMove(ref pos, move);
+                    break;
+            }
+
+            // Update castling rights
+            UpdateCastlingRights(ref pos, move);
+
+            // Move the piece
+            pos.MovePiece(fromSquare, toSquare);
+
+            // Handle promotion
+            if (move.IsPromotion)
+            {
+                pos.RemovePiece(toSquare);
+                pos.SetPiece(toSquare, move.PromotionPieceType, pos.IsWhiteToMove);
+            }
+
+            // Switch turns
+            pos.IsWhiteToMove = !pos.IsWhiteToMove;
+            
+            // Update full move number
+            if (pos.IsWhiteToMove) // If it's white's turn again, increment full move number
+            {
+                pos.FullMoveNumber++;
+            }
         }
 
-        private void UpdateCastlingRights(Move move)
+        private void HandleCastlingRookMove(ref BitboardPosition pos, Move move)
+        {
+            int toSquare = move.TargetSquare.Index;
+            
+            // Move the rook based on castling type
+            if (toSquare == 6) // White kingside castling (e1-g1)
+            {
+                pos.MovePiece(7, 5); // h1 to f1
+            }
+            else if (toSquare == 2) // White queenside castling (e1-c1)
+            {
+                pos.MovePiece(0, 3); // a1 to d1
+            }
+            else if (toSquare == 62) // Black kingside castling (e8-g8)
+            {
+                pos.MovePiece(63, 61); // h8 to f8
+            }
+            else if (toSquare == 58) // Black queenside castling (e8-c8)
+            {
+                pos.MovePiece(56, 59); // a8 to d8
+            }
+        }
+
+        private void UpdateCastlingRights(ref BitboardPosition pos, Move move)
         {
             // If king moves, lose both castling rights
             if (move.MovePieceType == PieceType.King)
             {
-                if (isWhiteToMove)
+                if (pos.IsWhiteToMove)
                 {
-                    whiteCanCastleKingside = false;
-                    whiteCanCastleQueenside = false;
+                    pos.WhiteCanCastleKingside = false;
+                    pos.WhiteCanCastleQueenside = false;
                 }
                 else
                 {
-                    blackCanCastleKingside = false;
-                    blackCanCastleQueenside = false;
+                    pos.BlackCanCastleKingside = false;
+                    pos.BlackCanCastleQueenside = false;
                 }
             }
 
             // If rook moves from starting square, lose that side's castling rights
             if (move.MovePieceType == PieceType.Rook)
             {
-                if (isWhiteToMove)
+                if (pos.IsWhiteToMove)
                 {
                     if (move.StartSquare.Index == 0) // a1
-                        whiteCanCastleQueenside = false;
+                        pos.WhiteCanCastleQueenside = false;
                     else if (move.StartSquare.Index == 7) // h1
-                        whiteCanCastleKingside = false;
+                        pos.WhiteCanCastleKingside = false;
                 }
                 else
                 {
                     if (move.StartSquare.Index == 56) // a8
-                        blackCanCastleQueenside = false;
+                        pos.BlackCanCastleQueenside = false;
                     else if (move.StartSquare.Index == 63) // h8
-                        blackCanCastleKingside = false;
+                        pos.BlackCanCastleKingside = false;
                 }
             }
 
@@ -302,13 +242,13 @@ namespace C0BR4ChessEngine.Core
             if (move.CapturePieceType == PieceType.Rook)
             {
                 if (move.TargetSquare.Index == 0) // a1
-                    whiteCanCastleQueenside = false;
+                    pos.WhiteCanCastleQueenside = false;
                 else if (move.TargetSquare.Index == 7) // h1
-                    whiteCanCastleKingside = false;
+                    pos.WhiteCanCastleKingside = false;
                 else if (move.TargetSquare.Index == 56) // a8
-                    blackCanCastleQueenside = false;
+                    pos.BlackCanCastleQueenside = false;
                 else if (move.TargetSquare.Index == 63) // h8
-                    blackCanCastleKingside = false;
+                    pos.BlackCanCastleKingside = false;
             }
         }
 
@@ -317,8 +257,7 @@ namespace C0BR4ChessEngine.Core
         /// </summary>
         public bool IsInCheck()
         {
-            var moveGenerator = new MoveGenerator(this);
-            return moveGenerator.IsCurrentPlayerInCheck();
+            return position.IsInCheck();
         }
 
         /// <summary>
@@ -342,7 +281,7 @@ namespace C0BR4ChessEngine.Core
         /// </summary>
         public bool IsDraw()
         {
-            return IsStalemate() || halfMoveClock >= 100; // 50-move rule
+            return IsStalemate() || position.HalfMoveClock >= 100; // 50-move rule
         }
 
         /// <summary>
@@ -350,90 +289,43 @@ namespace C0BR4ChessEngine.Core
         /// </summary>
         public string GetFEN()
         {
-            var fen = new System.Text.StringBuilder();
+            return position.ToFEN();
+        }
+
+        /// <summary>
+        /// Get the internal bitboard position (for advanced operations)
+        /// </summary>
+        public BitboardPosition GetBitboardPosition()
+        {
+            return position;
+        }
+
+        /// <summary>
+        /// Validate that a move is legal before applying it
+        /// This prevents the rule infractions that occurred in v2.0
+        /// </summary>
+        public bool IsLegalMove(Move move)
+        {
+            return moveGenerator.IsLegalMove(position, move);
+        }
+
+        /// <summary>
+        /// Find a legal move from a UCI move string (e.g., "e2e4")
+        /// Returns null if the move is not legal
+        /// </summary>
+        public Move? FindLegalMove(string moveString)
+        {
+            var legalMoves = GetLegalMoves();
             
-            // 1. Piece placement
-            for (int rank = 7; rank >= 0; rank--)
+            foreach (var move in legalMoves)
             {
-                int emptySquares = 0;
-                for (int file = 0; file < 8; file++)
+                if (move.ToString() == moveString)
                 {
-                    int squareIndex = rank * 8 + file;
-                    var piece = GetPiece(new Square(squareIndex));
-                    
-                    if (piece.IsNull)
-                    {
-                        emptySquares++;
-                    }
-                    else
-                    {
-                        if (emptySquares > 0)
-                        {
-                            fen.Append(emptySquares);
-                            emptySquares = 0;
-                        }
-                        
-                        char pieceChar = piece.PieceType switch
-                        {
-                            PieceType.Pawn => 'p',
-                            PieceType.Rook => 'r',
-                            PieceType.Knight => 'n',
-                            PieceType.Bishop => 'b',
-                            PieceType.Queen => 'q',
-                            PieceType.King => 'k',
-                            _ => '?'
-                        };
-                        
-                        if (piece.IsWhite)
-                        {
-                            pieceChar = char.ToUpper(pieceChar);
-                        }
-                        
-                        fen.Append(pieceChar);
-                    }
-                }
-                
-                if (emptySquares > 0)
-                {
-                    fen.Append(emptySquares);
-                }
-                
-                if (rank > 0)
-                {
-                    fen.Append('/');
+                    return move;
                 }
             }
             
-            // 2. Active color
-            fen.Append(' ');
-            fen.Append(IsWhiteToMove ? 'w' : 'b');
-            
-            // 3. Castling availability (simplified - just use stored flags)
-            fen.Append(' ');
-            var castling = "";
-            if (whiteCanCastleKingside) castling += "K";
-            if (whiteCanCastleQueenside) castling += "Q";
-            if (blackCanCastleKingside) castling += "k";
-            if (blackCanCastleQueenside) castling += "q";
-            fen.Append(castling == "" ? "-" : castling);
-            
-            // 4. En passant target square
-            fen.Append(' ');
-            if (enPassantSquare == -1)
-            {
-                fen.Append('-');
-            }
-            else
-            {
-                char file = (char)('a' + (enPassantSquare % 8));
-                int rank = (enPassantSquare / 8) + 1;
-                fen.Append($"{file}{rank}");
-            }
-            
-            // 5. Halfmove clock and fullmove number (simplified)
-            fen.Append(" 0 1");
-            
-            return fen.ToString();
+            return null; // Move not found or not legal
         }
     }
 }
