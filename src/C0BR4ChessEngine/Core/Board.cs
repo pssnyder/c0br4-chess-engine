@@ -165,7 +165,7 @@ namespace C0BR4ChessEngine.Core
             if (move.IsPromotion)
             {
                 pos.RemovePiece(toSquare);
-                pos.SetPiece(toSquare, move.PromotionPieceType, pos.IsWhiteToMove);
+                pos.SetPiece(toSquare, move.PromotionPieceType, pos.IsWhiteToMove, "promotion");
             }
 
             // Switch turns

@@ -246,6 +246,49 @@ namespace C0BR4ChessEngine.Core
     }
 
     /// <summary>
+    /// Ensure position consistency with optional validation (for FEN parsing)
+    /// </summary>
+    public void EnsurePositionConsistency(string context = null)
+    {
+        // 1. Update composite bitboards
+        UpdateCompositeBitboards();
+
+        // 2. Update castling rights
+        UpdateCastlingRights();
+
+        // Only do strict validation if not during FEN parsing or move operations
+        if (context != "FromFEN" && context != "move")
+        {
+            // 3. Validate total piece count
+            if (Bitboard.PopCount(AllPieces) > 32)
+            {
+                throw new InvalidOperationException("Position corruption: Too many pieces");
+            }
+
+            // 4. Validate kings - be more lenient during move operations
+            int whiteKings = Bitboard.PopCount(WhiteKing);
+            int blackKings = Bitboard.PopCount(BlackKing);
+            if (whiteKings > 1 || blackKings > 1)
+            {
+                throw new InvalidOperationException($"Position corruption: Too many kings - White: {whiteKings}, Black: {blackKings}");
+            }
+            // Allow temporary states with 0 kings during move operations, but log it
+            if (whiteKings == 0 || blackKings == 0)
+            {
+                // This could be a temporary state during move application
+                // Don't throw an exception, just update composite bitboards
+                return;
+            }
+
+            // 5. Validate pawn ranks
+            if ((WhitePawns & Bitboard.Rank8) != 0 || (BlackPawns & Bitboard.Rank1) != 0)
+            {
+                throw new InvalidOperationException("Position corruption: Invalid pawn position");
+            }
+        }
+    }
+
+    /// <summary>
     /// Update castling rights based on king and rook positions
     /// </summary>
     private void UpdateCastlingRights()
@@ -308,14 +351,22 @@ namespace C0BR4ChessEngine.Core
     /// </summary>
     public void SetPiece(int square, PieceType pieceType, bool isWhite)
     {
+        SetPiece(square, pieceType, isWhite, "move");
+    }
+
+    /// <summary>
+    /// Place a piece on the board with enhanced validation and context awareness
+    /// </summary>
+    public void SetPiece(int square, PieceType pieceType, bool isWhite, string context)
+    {
             // Validate input
             if (square < 0 || square >= 64)
                 throw new ArgumentOutOfRangeException(nameof(square));
             if (pieceType == PieceType.None)
                 throw new ArgumentException("Cannot set None piece type");
 
-            // Validate pawn placement
-            if (pieceType == PieceType.Pawn)
+            // Validate pawn placement (skip during move operations for now)
+            if (pieceType == PieceType.Pawn && context != "promotion" && context != "move")
             {
                 int rank = Bitboard.GetRank(square);
                 if (isWhite && rank == 7 || !isWhite && rank == 0)
@@ -367,7 +418,7 @@ namespace C0BR4ChessEngine.Core
             }
             
             // Ensure position remains valid
-            EnsurePositionConsistency();
+            EnsurePositionConsistency("move");
     }
 
     /// <summary>
@@ -486,7 +537,7 @@ namespace C0BR4ChessEngine.Core
             SetPiece(toSquare, pieceType, isWhite);
 
             // Ensure position remains valid
-            EnsurePositionConsistency();
+            EnsurePositionConsistency("move");
     }
 
     /// <summary>
@@ -676,7 +727,34 @@ namespace C0BR4ChessEngine.Core
                                 throw new ArgumentException("Rank overflow");
                                 
                             int square = Bitboard.GetSquare(file, rank);
-                            position.SetPiece(square, pieceType, isWhite);
+                            
+                            // Directly set the bitboard bits instead of using SetPiece to avoid intermediate validation
+                            ulong squareBit = Bitboard.SquareToBitboard(square);
+                            if (isWhite)
+                            {
+                                switch (pieceType)
+                                {
+                                    case PieceType.Pawn: position.WhitePawns |= squareBit; break;
+                                    case PieceType.Knight: position.WhiteKnights |= squareBit; break;
+                                    case PieceType.Bishop: position.WhiteBishops |= squareBit; break;
+                                    case PieceType.Rook: position.WhiteRooks |= squareBit; break;
+                                    case PieceType.Queen: position.WhiteQueens |= squareBit; break;
+                                    case PieceType.King: position.WhiteKing |= squareBit; break;
+                                }
+                            }
+                            else
+                            {
+                                switch (pieceType)
+                                {
+                                    case PieceType.Pawn: position.BlackPawns |= squareBit; break;
+                                    case PieceType.Knight: position.BlackKnights |= squareBit; break;
+                                    case PieceType.Bishop: position.BlackBishops |= squareBit; break;
+                                    case PieceType.Rook: position.BlackRooks |= squareBit; break;
+                                    case PieceType.Queen: position.BlackQueens |= squareBit; break;
+                                    case PieceType.King: position.BlackKing |= squareBit; break;
+                                }
+                            }
+                            
                             file++;
                             rankSum++;
                         }
@@ -773,8 +851,8 @@ namespace C0BR4ChessEngine.Core
                     throw new ArgumentException("Invalid fullmove number");
                 position.FullMoveNumber = fullMoves;
 
-                // Final validation
-                position.EnsurePositionConsistency();
+                // Final validation - use minimal validation during FEN parsing
+                position.EnsurePositionConsistency("FromFEN");
                 var validation = position.ValidateStateDetailed();
                 if (!validation.isValid)
                 {

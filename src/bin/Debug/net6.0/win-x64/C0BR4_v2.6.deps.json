@@ -7,14 +7,14 @@
   "targets": {
     ".NETCoreApp,Version=v6.0": {},
     ".NETCoreApp,Version=v6.0/win-x64": {
-      "C0BR4_v2.5/2.5.0": {
+      "C0BR4_v2.6/2.6.0": {
         "dependencies": {
           "Microsoft.NET.ILLink.Analyzers": "7.0.100-1.23401.1",
           "Microsoft.NET.ILLink.Tasks": "7.0.100-1.23401.1",
           "runtimepack.Microsoft.NETCore.App.Runtime.win-x64": "6.0.36"
         },
         "runtime": {
-          "C0BR4_v2.5.dll": {}
+          "C0BR4_v2.6.dll": {}
         }
       },
       "runtimepack.Microsoft.NETCore.App.Runtime.win-x64/6.0.36": {
@@ -859,7 +859,7 @@
     }
   },
   "libraries": {
-    "C0BR4_v2.5/2.5.0": {
+    "C0BR4_v2.6/2.6.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -5,11 +5,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>C0BR4_v2.5</AssemblyName>
+    <AssemblyName>C0BR4_v2.6</AssemblyName>
     <RootNamespace>C0BR4ChessEngine</RootNamespace>
-    <AssemblyVersion>2.5.0.0</AssemblyVersion>
-    <FileVersion>2.5.0.0</FileVersion>
-    <Version>2.5.0</Version>
+    <AssemblyVersion>2.6.0.0</AssemblyVersion>
+    <FileVersion>2.6.0.0</FileVersion>
+    <Version>2.6.0</Version>
     <Authors>C0BR4 Chess Engine Project</Authors>
     <Description>C0BR4 UCI Chess Engine with Opening Book (London System, Vienna Gambit, Caro-Kann, Dutch Defense)</Description>
     <Copyright>2025</Copyright>
