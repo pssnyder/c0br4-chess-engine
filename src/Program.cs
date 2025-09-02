@@ -11,6 +11,10 @@ namespace C0BR4ChessEngine
     {
         static void Main(string[] args)
         {
+            // CRITICAL FIX: Always initialize magic bitboards before starting UCI engine
+            // This was the root cause of illegal moves - uninitialized lookup tables!
+            MagicBitboards.Initialize();
+            
             if (args.Length > 0 && args[0] == "debug-queen")
             {
                 DebugQueenMoves();
@@ -23,9 +27,6 @@ namespace C0BR4ChessEngine
         
         static void DebugQueenMoves()
         {
-            // Initialize magic bitboards
-            MagicBitboards.Initialize();
-            
             // Create test position: rnbqkbnr/pppp1ppp/8/4p3/Q7/8/PPPPPPPP/RNB1KBNR w KQkq e6 0 2
             var position = BitboardPosition.FromFEN("rnbqkbnr/pppp1ppp/8/4p3/Q7/8/PPPPPPPP/RNB1KBNR w KQkq e6 0 2");
             

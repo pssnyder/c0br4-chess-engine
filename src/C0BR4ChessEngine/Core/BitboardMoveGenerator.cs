@@ -355,17 +355,20 @@ namespace C0BR4ChessEngine.Core
             // Set position for this check
             position = pos;
             
+            // Remember who is making the move (before switching turns)
+            bool movingPlayerIsWhite = pos.IsWhiteToMove;
+            
             // Make a copy of the position to test the move
             var testPosition = position;
             
             // Make the move
             MakeMove(ref testPosition, move);
             
-            // Check if our king is in check after the move
-            // CRITICAL FIX: Check if the king is attacked by the OPPOSITE color
+            // Check if the king of the side that just moved is in check
+            // After MakeMove, turns have been switched, so we check the king of the side that made the move
             bool isInCheck = testPosition.IsSquareAttacked(
-                testPosition.GetKingSquare(testPosition.IsWhiteToMove), 
-                !testPosition.IsWhiteToMove);
+                testPosition.GetKingSquare(movingPlayerIsWhite), 
+                !movingPlayerIsWhite);
             
             return !isInCheck;
         }

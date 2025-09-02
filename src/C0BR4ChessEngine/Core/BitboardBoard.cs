@@ -248,7 +248,7 @@ namespace C0BR4ChessEngine.Core
     /// <summary>
     /// Ensure position consistency with optional validation (for FEN parsing)
     /// </summary>
-    public void EnsurePositionConsistency(string context = null)
+    public void EnsurePositionConsistency(string? context = null)
     {
         // 1. Update composite bitboards
         UpdateCompositeBitboards();
