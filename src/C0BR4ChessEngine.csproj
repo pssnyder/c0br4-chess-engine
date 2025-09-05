@@ -5,13 +5,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>C0BR4_v2.8</AssemblyName>
+    <AssemblyName>C0BR4_v2.9</AssemblyName>
     <RootNamespace>C0BR4ChessEngine</RootNamespace>
-    <AssemblyVersion>2.8.0.0</AssemblyVersion>
-    <FileVersion>2.8.0.0</FileVersion>
-    <Version>2.8.0</Version>
+    <AssemblyVersion>2.9.0.0</AssemblyVersion>
+    <FileVersion>2.9.0.0</FileVersion>
+    <Version>2.9.0</Version>
     <Authors>C0BR4 Chess Engine Project</Authors>
-    <Description>C0BR4 UCI Chess Engine v2.8 - Fixed Magic Bitboards with Clean Ray-Based Implementation</Description>
+    <Description>C0BR4 UCI Chess Engine v2.9 - Enhanced UCI Output with Full Principal Variation</Description>
     <Copyright>2025</Copyright>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>

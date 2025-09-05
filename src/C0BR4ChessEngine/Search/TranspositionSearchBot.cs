@@ -16,11 +16,13 @@ namespace C0BR4ChessEngine.Search
         private long nodesSearched = 0;
         private long quiescenceNodes = 0;
         private int searchDepth = 4; // Default search depth
+        private List<Move> currentPV = new(); // Principal variation line
 
         public Move Think(Board board, TimeSpan timeLimit)
         {
             nodesSearched = 0;
             quiescenceNodes = 0;
+            currentPV.Clear();
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             
             // Safety check - ensure we have legal moves before searching
@@ -31,7 +33,35 @@ namespace C0BR4ChessEngine.Search
                 return Move.NullMove;
             }
             
-            Move bestMove = SearchBestMove(board, searchDepth);
+            Move bestMove = legalMoves[0];
+            int bestScore = -50000;
+            
+            // Iterative deepening search
+            for (int depth = 1; depth <= searchDepth; depth++)
+            {
+                if (stopwatch.Elapsed >= timeLimit)
+                    break;
+                    
+                var (move, score, pv) = SearchWithPV(board, depth);
+                
+                if (move != Move.NullMove)
+                {
+                    bestMove = move;
+                    bestScore = score;
+                    currentPV = pv;
+                    
+                    // Output UCI info for this depth
+                    var pvString = string.Join(" ", currentPV.Select(m => m.ToString()));
+                    var elapsed = stopwatch.ElapsedMilliseconds;
+                    var nps = elapsed > 0 ? (long)(nodesSearched * 1000 / elapsed) : 0;
+                    
+                    Console.WriteLine($"info depth {depth} score cp {bestScore} nodes {nodesSearched} nps {nps} time {elapsed} pv {pvString}");
+                }
+                
+                // Break if we found a mate
+                if (Math.Abs(bestScore) > 20000)
+                    break;
+            }
             
             stopwatch.Stop();
             
@@ -45,34 +75,32 @@ namespace C0BR4ChessEngine.Search
             // Get transposition table statistics
             var (ttHits, ttStores, ttEntries) = transpositionTable.GetStatistics();
             
-            // Report search statistics including TT stats
-            Console.WriteLine($"info depth {searchDepth} nodes {nodesSearched} qnodes {quiescenceNodes} tthits {ttHits} ttentries {ttEntries} time {stopwatch.ElapsedMilliseconds} nps {(long)(nodesSearched / Math.Max(stopwatch.Elapsed.TotalSeconds, 0.001))}");
+            // Final search summary
+            Console.WriteLine($"info string Search completed: depth {searchDepth} nodes {nodesSearched} qnodes {quiescenceNodes} tthits {ttHits}");
             
             return bestMove;
         }
 
-        private Move SearchBestMove(Board board, int depth)
+        private (Move bestMove, int bestScore, List<Move> pv) SearchWithPV(Board board, int depth)
         {
             var moves = board.GetLegalMoves();
             if (moves.Length == 0)
             {
-                Console.WriteLine("info string No legal moves available");
-                return Move.NullMove;
+                return (Move.NullMove, -50000, new List<Move>());
             }
 
             // Order moves for better alpha-beta pruning
             moves = MoveOrdering.OrderMoves(board, moves);
 
             Move bestMove = moves[0];
-            int bestScore = -50000; // Start with very low score
+            int bestScore = -50000;
+            List<Move> bestPV = new();
 
             // Check transposition table for a previous best move to try first
             if (transpositionTable.TryGetEntry(board, depth, -50000, 50000, out var ttEntry))
             {
-                // If we have a cached best move, validate it's still legal before using
                 if (ttEntry.BestMove != Move.NullMove && IsMoveLegal(board, ttEntry.BestMove, moves))
                 {
-                    // Move the TT best move to the front of the list
                     for (int i = 0; i < moves.Length; i++)
                     {
                         if (moves[i].Equals(ttEntry.BestMove))
@@ -87,21 +115,23 @@ namespace C0BR4ChessEngine.Search
             foreach (var move in moves)
             {
                 board.MakeMove(move);
-                int score = -AlphaBeta(board, depth - 1, -50000, -bestScore);
+                var (score, childPV) = AlphaBetaWithPV(board, depth - 1, -50000, -bestScore);
+                score = -score;
                 board.UnmakeMove();
 
                 if (score > bestScore)
                 {
                     bestScore = score;
                     bestMove = move;
+                    bestPV = new List<Move> { move };
+                    bestPV.AddRange(childPV);
                 }
             }
 
             // Store the result in the transposition table
             transpositionTable.StoreEntry(board, depth, bestScore, bestMove, -50000, 50000);
 
-            Console.WriteLine($"info score cp {bestScore} pv {bestMove}");
-            return bestMove;
+            return (bestMove, bestScore, bestPV);
         }
 
         /// <summary>
@@ -115,6 +145,95 @@ namespace C0BR4ChessEngine.Search
                     return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Alpha-beta search with Principal Variation collection
+        /// </summary>
+        private (int score, List<Move> pv) AlphaBetaWithPV(Board board, int depth, int alpha, int beta)
+        {
+            nodesSearched++;
+
+            // Check transposition table first
+            if (transpositionTable.TryGetEntry(board, depth, alpha, beta, out var ttEntry))
+            {
+                return (ttEntry.Score, new List<Move>());
+            }
+
+            // Base case: enter quiescence search
+            if (depth == 0)
+            {
+                int qScore = Quiescence(board, alpha, beta);
+                transpositionTable.StoreEntry(board, 0, qScore, Move.NullMove, alpha, beta);
+                return (qScore, new List<Move>());
+            }
+
+            var moves = board.GetLegalMoves();
+            
+            // Check for terminal positions
+            if (moves.Length == 0)
+            {
+                int terminalScore;
+                if (board.IsInCheck())
+                {
+                    terminalScore = -30000 + (searchDepth - depth);
+                }
+                else
+                {
+                    terminalScore = 0;
+                }
+                
+                transpositionTable.StoreEntry(board, depth, terminalScore, Move.NullMove, alpha, beta);
+                return (terminalScore, new List<Move>());
+            }
+
+            // Order moves for better pruning
+            moves = MoveOrdering.OrderMoves(board, moves);
+
+            // If we have a cached best move from TT, try it first
+            if (ttEntry.BestMove != Move.NullMove && IsMoveLegal(board, ttEntry.BestMove, moves))
+            {
+                for (int i = 0; i < moves.Length; i++)
+                {
+                    if (moves[i].Equals(ttEntry.BestMove))
+                    {
+                        (moves[0], moves[i]) = (moves[i], moves[0]);
+                        break;
+                    }
+                }
+            }
+
+            int maxScore = alpha;
+            Move bestMove = Move.NullMove;
+            List<Move> bestPV = new();
+
+            // Try each move
+            foreach (var move in moves)
+            {
+                board.MakeMove(move);
+                var (score, childPV) = AlphaBetaWithPV(board, depth - 1, -beta, -maxScore);
+                score = -score;
+                board.UnmakeMove();
+
+                if (score > maxScore)
+                {
+                    maxScore = score;
+                    bestMove = move;
+                    bestPV = new List<Move> { move };
+                    bestPV.AddRange(childPV);
+                }
+
+                // Alpha-beta cutoff
+                if (maxScore >= beta)
+                {
+                    transpositionTable.StoreEntry(board, depth, maxScore, bestMove, alpha, beta);
+                    return (beta, bestPV);
+                }
+            }
+
+            // Store the search result
+            transpositionTable.StoreEntry(board, depth, maxScore, bestMove, alpha, beta);
+            return (maxScore, bestPV);
         }
 
         /// <summary>

@@ -5,10 +5,10 @@
   },
   "projects": {
     "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj": {
-      "version": "2.8.0",
+      "version": "2.9.0",
       "restore": {
         "projectUniqueName": "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj",
-        "projectName": "C0BR4_v2.8",
+        "projectName": "C0BR4_v2.9",
         "projectPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj",
         "packagesPath": "C:\\Users\\patss\\.nuget\\packages\\",
         "outputPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\obj\\",
