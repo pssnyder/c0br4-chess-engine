@@ -11,11 +11,11 @@ using System;
 using System.Reflection;
 
 [assembly: System.Reflection.AssemblyCompanyAttribute("C0BR4 Chess Engine Project")]
-[assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
+[assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyCopyrightAttribute("2025")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("C0BR4 UCI Chess Engine v2.9 - Enhanced UCI Output with Full Principal Variation")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("2.9.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.9.0+0ff7e92b1b62e7521e785eeaaadf0a68a602d46e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("2.9.0+b1d764151b09291a93e2862dcb501e286dcebe1f")]
 [assembly: System.Reflection.AssemblyProductAttribute("C0BR4_v2.9")]
 [assembly: System.Reflection.AssemblyTitleAttribute("C0BR4_v2.9")]
 [assembly: System.Reflection.AssemblyVersionAttribute("2.9.0.0")]
