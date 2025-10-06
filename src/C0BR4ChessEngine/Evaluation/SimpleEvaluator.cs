@@ -33,6 +33,13 @@ namespace C0BR4ChessEngine.Evaluation
             evaluation += CastlingIncentive.Evaluate(board, gamePhase);
             evaluation += CastlingRights.Evaluate(board, gamePhase);
             
+            // Advanced endgame heuristics (tablebaseless patterns)
+            evaluation += AdvancedEndgame.Evaluate(board, gamePhase);
+            
+            // DISABLED: Tactical pattern recognition (causing 10x performance regression)
+            // TODO v3.1: Optimize TacticalEvaluator before re-enabling
+            // evaluation += TacticalEvaluator.Evaluate(board, gamePhase);
+            
             // Return from perspective of side to move
             return board.IsWhiteToMove ? evaluation : -evaluation;
         }

@@ -55,9 +55,16 @@ Medium Priority Backlog v2.0
 
 Low Priority Backlog
 --------------------
-- [ ] Enhanced Endgame Tactics: expand endgame piece profiles to include strategies for pawn advances, rook and queen positioning relative to opponent king ("closing the box" method), and knight/bishop coordination.
+- ✅ **Enhanced Endgame Tactics**: expand endgame piece profiles to include strategies for pawn advances, rook and queen positioning relative to opponent king ("closing the box" method), and knight/bishop coordination. ✅ **COMPLETE v3.0** - Implemented comprehensive tablebaseless endgame heuristics including:
+  - **Pawn Race Evaluation**: "The box" principle for safe pawn promotion vs defending
+  - **Rook + Pawn Tactics**: Rook supporting pawn promotion patterns
+  - **Progressive Endgame Phases**: Medium/High/Very High endgame with different strategic priorities
+  - **King Edge Forcing**: Push enemy king to board edges in high endgame
+  - **Box Closing**: Reduce enemy king mobility through piece coordination
+  - **Piece Centralization**: Attack patterns toward enemy king in very late endgame
+  - **Pawn Promotion Urgency**: Advanced pawn pushing in critical positions
+- ✅ **Enhanced Perft Testing**: Complete perft implementation with make/unmake moves, perft divide for debugging, comprehensive test suite with known positions, and performance benchmarking. Added UCI commands: `perft <depth>`, `perftdivide <depth>`, `perftbench`. ✅ **COMPLETE v3.0**
 - [ ] Robust UCI options support — implement `setoption` and expose parameters like search depth, time, nodes, nodes/sec, value, mainline.
-- [ ] Add perft function for move-generation verification.
 - [ ] Enhanced opening book: expand to include more of the most popular "first moves" for white, and "best defenses" for black.
 
 

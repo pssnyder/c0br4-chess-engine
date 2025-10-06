@@ -15,63 +15,79 @@ namespace C0BR4ChessEngine.Opening
         #region London System (White with d4)
         private static readonly string[][] LondonSystemLines = new string[][]
         {
-            // Main London System lines
-            new[] { "d4", "Nf3", "Bf4", "e3", "Bd3" },
-            new[] { "d4", "Nf3", "Bf4", "e3", "c3" },
-            new[] { "d4", "Bf4", "Nf3", "e3", "Bd3" },
-            new[] { "d4", "Bf4", "e3", "Nf3", "Bd3" },
+            // Main London System lines - extended with castling and development
+            new[] { "d4", "Nf3", "Bf4", "e3", "Bd3", "Nbd2", "c3", "O-O" },
+            new[] { "d4", "Nf3", "Bf4", "e3", "c3", "Bd3", "Nbd2", "O-O" },
+            new[] { "d4", "Bf4", "Nf3", "e3", "Bd3", "Nbd2", "O-O", "c3" },
+            new[] { "d4", "Bf4", "e3", "Nf3", "Bd3", "c3", "Nbd2", "O-O" },
             
-            // London vs various black setups
-            new[] { "d4", "Nf3", "Bf4", "e3", "Bd3", "Nbd2" }, // vs ...d5
-            new[] { "d4", "Nf3", "Bf4", "e3", "Bd3", "h3" },   // vs ...Bg4
+            // London vs d5 setup - solid development
+            new[] { "d4", "Nf3", "Bf4", "e3", "Bd3", "Nbd2", "O-O", "c3", "Re1" },
+            new[] { "d4", "Nf3", "Bf4", "e3", "Bd3", "h3", "Nbd2", "O-O", "c3" },
+            
+            // London vs Nf6 setup - space advantage
+            new[] { "d4", "Nf3", "Bf4", "e3", "Bd3", "c3", "Nbd2", "O-O", "h3" },
+            new[] { "d4", "Bf4", "Nf3", "e3", "Bd3", "h3", "Nbd2", "O-O", "c4" },
         };
         #endregion
 
         #region Vienna Gambit (White with e4)
         private static readonly string[][] ViennaGambitLines = new string[][]
         {
-            // Main Vienna Gambit lines
-            new[] { "e4", "Nc3", "f4", "Nf3" },
-            new[] { "e4", "Nc3", "Bc4", "f4" },
-            new[] { "e4", "Nc3", "f4", "Bc4", "Nf3" },
+            // Main Vienna Gambit lines - aggressive but sound development
+            new[] { "e4", "Nc3", "f4", "Nf3", "Bb5+", "Bd2", "Bxd2+", "Qxd2" },
+            new[] { "e4", "Nc3", "Bc4", "f4", "Nf3", "d3", "O-O", "Qe2" },
+            new[] { "e4", "Nc3", "f4", "Bc4", "Nf3", "d3", "O-O", "Bb3" },
             
-            // Vienna Game proper (less aggressive)
-            new[] { "e4", "Nc3", "Nf3", "Bc4" },
-            new[] { "e4", "Nc3", "Bc4", "Nf3" },
+            // Vienna Game proper (less aggressive) - positional control
+            new[] { "e4", "Nc3", "Nf3", "Bc4", "d3", "O-O", "Bg5", "h3" },
+            new[] { "e4", "Nc3", "Bc4", "Nf3", "d3", "O-O", "a3", "Ba2" },
+            
+            // Vienna vs King's Indian setup
+            new[] { "e4", "Nc3", "Nf3", "g3", "Bg2", "O-O", "d3", "Rb1" },
+            new[] { "e4", "Nc3", "g3", "Bg2", "Nge2", "O-O", "d3", "h3" },
         };
         #endregion
 
         #region Caro-Kann Defense (Black vs e4)
         private static readonly string[][] CaroKannLines = new string[][]
         {
-            // Main line Caro-Kann
-            new[] { "c6", "d5", "Nc6", "Bg4" },
-            new[] { "c6", "d5", "Nc6", "e6" },
-            new[] { "c6", "d5", "Nc6", "dxe4", "Nxe4" },
+            // Main line Caro-Kann - solid development for Black
+            new[] { "c6", "d5", "Nc6", "Bg4", "Be2", "Bxe2", "Qxe2", "e6", "Nf3" },
+            new[] { "c6", "d5", "Nc6", "e6", "Nf3", "Bd6", "Bd3", "Ne7", "O-O" },
+            new[] { "c6", "d5", "Nc6", "dxe4", "Nxe4", "Nd7", "Nf3", "Ngf6", "Ng3" },
             
-            // Advance variation response
-            new[] { "c6", "d5", "c5", "e6" },
-            new[] { "c6", "d5", "c5", "Nc6" },
+            // Advance variation response - counterplay
+            new[] { "c6", "d5", "c5", "e6", "Nc6", "Nge7", "cxd4", "cxd4", "Nf5" },
+            new[] { "c6", "d5", "c5", "Nc6", "cxd4", "cxd4", "Nf6", "Bd3", "e6" },
             
-            // Exchange variation
-            new[] { "c6", "d5", "cxd5", "Nc6" },
+            // Exchange variation - active piece play
+            new[] { "c6", "d5", "cxd5", "Nc6", "Nf3", "Bg4", "Be2", "e6", "O-O" },
+            new[] { "c6", "d5", "cxd5", "Nf6", "Nc3", "cxd5", "Bg5", "e6", "Bxf6" },
+            
+            // Panov-Botvinnik Attack response
+            new[] { "c6", "d5", "cxd5", "e6", "Nc3", "exd5", "Nf3", "Nc6", "Bg5" },
         };
         #endregion
 
         #region Dutch Defense (Black vs d4)
         private static readonly string[][] DutchDefenseLines = new string[][]
         {
-            // Classical Dutch
-            new[] { "f5", "Nf6", "e6", "Be7", "O-O" },
-            new[] { "f5", "Nf6", "e6", "d6", "Be7" },
+            // Classical Dutch - solid kingside development
+            new[] { "f5", "Nf6", "e6", "Be7", "O-O", "d6", "Qe8", "Qh5", "Nbd7" },
+            new[] { "f5", "Nf6", "e6", "d6", "Be7", "O-O", "Nbd7", "Qe8", "c6" },
             
-            // Leningrad Dutch
-            new[] { "f5", "Nf6", "g6", "Bg7", "O-O" },
-            new[] { "f5", "g6", "Bg7", "Nf6", "O-O" },
+            // Leningrad Dutch - kingside fianchetto system
+            new[] { "f5", "Nf6", "g6", "Bg7", "O-O", "d6", "Nc6", "Qe8", "e5" },
+            new[] { "f5", "g6", "Bg7", "Nf6", "O-O", "d6", "c6", "Qe8", "Na6" },
             
-            // Stonewall Dutch
-            new[] { "f5", "e6", "d5", "Bd6", "Nf6" },
-            new[] { "f5", "e6", "Nf6", "d5", "Bd6" },
+            // Stonewall Dutch - central control
+            new[] { "f5", "e6", "d5", "Bd6", "Nf6", "c6", "Nbd7", "O-O", "Qe7" },
+            new[] { "f5", "e6", "Nf6", "d5", "Bd6", "c6", "O-O", "Nbd7", "Ne4" },
+            
+            // Classical Dutch with early ...c6
+            new[] { "f5", "Nf6", "e6", "c6", "d6", "Be7", "O-O", "Nbd7", "Qe8" },
+            new[] { "f5", "e6", "Nf6", "c6", "Be7", "d6", "O-O", "Nbd7", "Qe7" },
         };
         #endregion
 
@@ -82,23 +98,32 @@ namespace C0BR4ChessEngine.Opening
             // Starting position - choose e4 or d4 randomly
             ["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"] = new[] { "e4", "d4" },
             
-            // After 1.e4
-            ["rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"] = new[] { "e5", "c6", "c5" },
+            // After 1.e4 - encourage main defenses
+            ["rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1"] = new[] { "e5", "c6", "c5", "e6" },
             
-            // After 1.d4
-            ["rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1"] = new[] { "d5", "Nf6", "f5" },
+            // After 1.d4 - encourage solid responses
+            ["rnbqkbnr/pppppppp/8/8/3P4/8/PPP1PPPP/RNBQKBNR b KQkq d3 0 1"] = new[] { "d5", "Nf6", "f5", "e6" },
             
             // After 1.e4 e5 - go into Vienna
-            ["rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2"] = new[] { "Nc3" },
+            ["rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq e6 0 2"] = new[] { "Nc3", "Nf3" },
             
-            // After 1.e4 c6 - Caro-Kann
-            ["rnbqkbnr/pp1ppppp/2p5/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"] = new[] { "d4" },
+            // After 1.e4 c6 - Caro-Kann continuation
+            ["rnbqkbnr/pp1ppppp/2p5/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 2"] = new[] { "d4", "Nc3" },
             
-            // After 1.d4 d5 - go into London
+            // After 1.d4 d5 - go into London System
             ["rnbqkbnr/ppp1pppp/8/3p4/3P4/8/PPP1PPPP/RNBQKBNR w KQkq d6 0 2"] = new[] { "Nf3", "Bf4" },
             
-            // After 1.d4 f5 - Dutch Defense
-            ["rnbqkbnr/ppppp1pp/8/5p2/3P4/8/PPP1PPPP/RNBQKBNR w KQkq f6 0 2"] = new[] { "Nf3", "c4" },
+            // After 1.d4 f5 - Dutch Defense responses
+            ["rnbqkbnr/ppppp1pp/8/5p2/3P4/8/PPP1PPPP/RNBQKBNR w KQkq f6 0 2"] = new[] { "Nf3", "c4", "g3" },
+            
+            // After 1.d4 Nf6 - solid development
+            ["rnbqkb1r/pppppppp/5n2/8/3P4/8/PPP1PPPP/RNBQKBNR w KQkq - 1 2"] = new[] { "Nf3", "c4", "Bf4" },
+            
+            // Vienna Game continuations
+            ["rnbqkb1r/pppp1ppp/5n2/4p3/4P3/2N5/PPPP1PPP/R1BQKBNR w KQkq - 2 3"] = new[] { "f4", "Bc4", "Nf3" },
+            
+            // London System development
+            ["rnbqkb1r/ppp1pppp/5n2/3p4/3P1B2/5N2/PPP1PPPP/RN1QKBNR w KQkq - 2 3"] = new[] { "e3", "c3" },
         };
         #endregion
 
@@ -111,9 +136,9 @@ namespace C0BR4ChessEngine.Opening
         /// <returns>Opening move in algebraic notation, or null if not in book</returns>
         public static string? GetOpeningMove(Board board)
         {
-            // Only use opening book in first 8 moves (16 half-moves)
+            // Extended opening book coverage to 12 moves (24 half-moves)
             int halfMoves = (board.FullMoveNumber - 1) * 2 + (board.IsWhiteToMove ? 0 : 1);
-            if (halfMoves > 16) // 8 moves per side
+            if (halfMoves > 24) // 12 moves per side
                 return null;
 
             // For now, use simple move-based logic since FEN generation isn't implemented
@@ -131,7 +156,15 @@ namespace C0BR4ChessEngine.Opening
                 1 => !board.IsWhiteToMove ? GetBlackResponse() : null, // First move for black
                 2 => board.IsWhiteToMove ? GetWhiteSecondMove() : null, // Second move for white
                 3 => !board.IsWhiteToMove ? GetBlackSecondMove() : null, // Second move for black
-                _ => null // Fall back to engine after move 2
+                4 => board.IsWhiteToMove ? GetWhiteThirdMove() : null, // Third move for white
+                5 => !board.IsWhiteToMove ? GetBlackThirdMove() : null, // Third move for black
+                6 => board.IsWhiteToMove ? GetWhiteFourthMove() : null, // Fourth move for white
+                7 => !board.IsWhiteToMove ? GetBlackFourthMove() : null, // Fourth move for black
+                8 => board.IsWhiteToMove ? GetWhiteFifthMove() : null, // Fifth move for white
+                9 => !board.IsWhiteToMove ? GetBlackFifthMove() : null, // Fifth move for black
+                10 => board.IsWhiteToMove ? GetWhiteSixthMove() : null, // Sixth move for white
+                11 => !board.IsWhiteToMove ? GetBlackSixthMove() : null, // Sixth move for black
+                _ => null // Fall back to engine after move 6
             };
         }
 
@@ -162,6 +195,86 @@ namespace C0BR4ChessEngine.Opening
         {
             // Develop pieces
             string[] moves = { "Nf6", "Nc6", "Be7", "Bg4" };
+            return moves[random.Next(moves.Length)];
+        }
+
+        /// <summary>
+        /// Get White's third move
+        /// </summary>
+        private static string GetWhiteThirdMove()
+        {
+            // Continue opening development
+            string[] moves = { "Bd3", "Bb5+", "e3", "d3", "O-O", "Be2" };
+            return moves[random.Next(moves.Length)];
+        }
+
+        /// <summary>
+        /// Get Black's third move
+        /// </summary>
+        private static string GetBlackThirdMove()
+        {
+            // Continue development and castle preparation
+            string[] moves = { "Be7", "Bd6", "O-O", "e6", "d6", "Bg4" };
+            return moves[random.Next(moves.Length)];
+        }
+
+        /// <summary>
+        /// Get White's fourth move
+        /// </summary>
+        private static string GetWhiteFourthMove()
+        {
+            // Castle and complete development
+            string[] moves = { "O-O", "Nbd2", "c3", "h3", "Qe2", "Re1" };
+            return moves[random.Next(moves.Length)];
+        }
+
+        /// <summary>
+        /// Get Black's fourth move
+        /// </summary>
+        private static string GetBlackFourthMove()
+        {
+            // Castle and coordinate pieces
+            string[] moves = { "O-O", "Nbd7", "c6", "Qe8", "Re8", "h6" };
+            return moves[random.Next(moves.Length)];
+        }
+
+        /// <summary>
+        /// Get White's fifth move
+        /// </summary>
+        private static string GetWhiteFifthMove()
+        {
+            // Central control and piece coordination
+            string[] moves = { "Re1", "c4", "h3", "Qe2", "Bb3", "a3" };
+            return moves[random.Next(moves.Length)];
+        }
+
+        /// <summary>
+        /// Get Black's fifth move
+        /// </summary>
+        private static string GetBlackFifthMove()
+        {
+            // Active piece play
+            string[] moves = { "Re8", "c5", "Qe7", "h6", "a6", "Rb8" };
+            return moves[random.Next(moves.Length)];
+        }
+
+        /// <summary>
+        /// Get White's sixth move
+        /// </summary>
+        private static string GetWhiteSixthMove()
+        {
+            // Transition to middlegame
+            string[] moves = { "Qe2", "h3", "a3", "c4", "Rb1", "Bd2" };
+            return moves[random.Next(moves.Length)];
+        }
+
+        /// <summary>
+        /// Get Black's sixth move
+        /// </summary>
+        private static string GetBlackSixthMove()
+        {
+            // Middlegame preparation
+            string[] moves = { "Qe7", "a6", "c5", "h6", "Bd7", "Rb8" };
             return moves[random.Next(moves.Length)];
         }
 
@@ -246,16 +359,16 @@ namespace C0BR4ChessEngine.Opening
         /// </summary>
         public static bool IsInOpeningPhase(Board board)
         {
-            // Simple heuristics for opening phase
+            // Extended opening phase to match deeper book coverage
             int halfMoves = (board.FullMoveNumber - 1) * 2 + (board.IsWhiteToMove ? 0 : 1);
-            if (halfMoves > 20) // 10 moves per side
+            if (halfMoves > 24) // 12 moves per side (extended from 10)
                 return false;
 
             // Count developed pieces (not on starting squares)
             int developedPieces = CountDevelopedPieces(board);
             
-            // If too many pieces developed, we're past opening
-            return developedPieces < 8;
+            // If too many pieces developed, we're past opening (increased threshold)
+            return developedPieces < 10;
         }
 
         /// <summary>
