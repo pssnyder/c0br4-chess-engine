@@ -7,12 +7,14 @@ namespace C0BR4ChessEngine.Search
 {
     /// <summary>
     /// Alpha-beta search with move ordering, quiescence search, and transposition table
-    /// Transposition table caches previously computed positions to avoid re-search
+    /// v3.0: Enhanced with killer moves and history heuristic for improved performance
     /// </summary>
     public class TranspositionSearchBot : IChessBot
     {
         private readonly SimpleEvaluator evaluator = new();
         private readonly TranspositionTable transpositionTable = new(100000); // 100K entries
+        private readonly KillerMoves killerMoves = new(); // v3.0: Killer move heuristic
+        private readonly HistoryTable historyTable = new(); // v3.0: History heuristic
         private long nodesSearched = 0;
         private long quiescenceNodes = 0;
         private int searchDepth = 6; // v3.0: Enhanced default search depth
@@ -25,6 +27,10 @@ namespace C0BR4ChessEngine.Search
         {
             nodesSearched = 0;
             quiescenceNodes = 0;
+            
+            // v3.0: Clear killer moves and age history at start of search
+            killerMoves.Clear();
+            historyTable.Age();
             
             // v3.0: PV Fast Followup - check if opponent played into our predicted line
             if (ShouldUsePVFollowup(board))

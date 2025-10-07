@@ -344,18 +344,20 @@ namespace C0BR4ChessEngine.Evaluation
 
         /// <summary>
         /// Find the king for a given side
+        /// v3.0: Optimized using bitboards instead of 64-square loop
         /// </summary>
         private static Piece FindKing(Board board, bool isWhite)
         {
-            for (int square = 0; square < 64; square++)
+            var pos = board.GetBitboardPosition();
+            ulong kingBitboard = isWhite ? pos.WhiteKing : pos.BlackKing;
+            
+            if (kingBitboard != 0)
             {
-                var piece = board.GetPiece(new Square(square));
-                if (!piece.IsNull && piece.IsWhite == isWhite && piece.PieceType == PieceType.King)
-                {
-                    return piece;
-                }
+                int kingSquare = Bitboard.LSB(kingBitboard);
+                return new Piece(PieceType.King, isWhite, new Square(kingSquare));
             }
-            return new Piece(); // Null piece
+            
+            return new Piece(); // Null piece (should never happen in valid position)
         }
 
         /// <summary>

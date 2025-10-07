@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute("C0BR4 UCI Chess Engine v3.0 - Advanced Endgame Heuristics with Tablebaseless Eval" +
     "uation")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("3.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.0.0+3ab00dfedc0b315635359fa2f45de57f131d555e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.0.0+1b18f9d6c24c6e21987eb9d4f1e0a94217a481cd")]
 [assembly: System.Reflection.AssemblyProductAttribute("C0BR4_v3.0")]
 [assembly: System.Reflection.AssemblyTitleAttribute("C0BR4_v3.0")]
 [assembly: System.Reflection.AssemblyVersionAttribute("3.0.0.0")]

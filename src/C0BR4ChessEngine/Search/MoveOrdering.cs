@@ -8,14 +8,16 @@ namespace C0BR4ChessEngine.Search
     /// <summary>
     /// Move ordering utility to improve alpha-beta pruning efficiency
     /// Orders moves by expected strength: captures, promotions, checks, then others
+    /// v3.0: Enhanced with killer moves and history heuristic
     /// </summary>
     public static class MoveOrdering
     {
         /// <summary>
-        /// Order moves for better alpha-beta pruning
+        /// Order moves for better alpha-beta pruning with killer moves and history
         /// Most promising moves first to maximize cutoffs
         /// </summary>
-        public static Move[] OrderMoves(Board board, Move[] moves)
+        public static Move[] OrderMoves(Board board, Move[] moves, int depth = 0, 
+            KillerMoves? killerMoves = null, HistoryTable? historyTable = null)
         {
             if (moves.Length <= 1) return moves;
 
@@ -24,7 +26,7 @@ namespace C0BR4ChessEngine.Search
             
             for (int i = 0; i < moves.Length; i++)
             {
-                scoredMoves[i] = (moves[i], ScoreMove(board, moves[i]));
+                scoredMoves[i] = (moves[i], ScoreMove(board, moves[i], depth, killerMoves, historyTable));
             }
 
             // Sort by score (highest first)
@@ -41,10 +43,11 @@ namespace C0BR4ChessEngine.Search
         }
 
         /// <summary>
-        /// v3.0: Enhanced move scoring with advanced tactical recognition
+        /// v3.0: Enhanced move scoring with killer moves and history heuristic
         /// Higher scores = more promising moves that should be searched first
         /// </summary>
-        private static int ScoreMove(Board board, Move move)
+        private static int ScoreMove(Board board, Move move, int depth = 0, 
+            KillerMoves? killerMoves = null, HistoryTable? historyTable = null)
         {
             int score = 0;
 
@@ -64,14 +67,30 @@ namespace C0BR4ChessEngine.Search
                     score += 200; // Extra bonus for capturing undefended pieces
                 }
             }
+            else
+            {
+                // Non-capture moves: use killer moves and history heuristic
+                
+                // 2. Killer moves - non-captures that caused beta cutoffs
+                if (killerMoves != null)
+                {
+                    score += killerMoves.GetKillerBonus(move, depth);
+                }
+                
+                // 3. History heuristic - moves that historically caused cutoffs
+                if (historyTable != null)
+                {
+                    score += historyTable.GetHistoryScore(move, board);
+                }
+            }
 
-            // 2. Promotions - very valuable
+            // 4. Promotions - very valuable
             if (move.PromotionPieceType != PieceType.None)
             {
                 score += 9000 + GetPieceValue(move.PromotionPieceType);
             }
 
-            // 3. Checks - often strong moves, especially discovered checks
+            // 5. Checks - often strong moves, especially discovered checks
             board.MakeMove(move);
             bool givesCheck = board.IsInCheck();
             board.UnmakeMove();

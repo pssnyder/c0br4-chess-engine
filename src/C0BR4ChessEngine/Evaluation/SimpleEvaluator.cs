@@ -33,8 +33,9 @@ namespace C0BR4ChessEngine.Evaluation
             evaluation += CastlingIncentive.Evaluate(board, gamePhase);
             evaluation += CastlingRights.Evaluate(board, gamePhase);
             
-            // Advanced endgame heuristics (tablebaseless patterns)
-            evaluation += AdvancedEndgame.Evaluate(board, gamePhase);
+            // DISABLED: Advanced endgame heuristics (potential performance impact)
+            // TODO v3.1: Profile and optimize before re-enabling
+            // evaluation += AdvancedEndgame.Evaluate(board, gamePhase);
             
             // DISABLED: Tactical pattern recognition (causing 10x performance regression)
             // TODO v3.1: Optimize TacticalEvaluator before re-enabling
@@ -46,24 +47,28 @@ namespace C0BR4ChessEngine.Evaluation
 
         /// <summary>
         /// Calculate material difference from white's perspective
+        /// v3.0: Optimized using bitboards instead of 64-square loop
         /// </summary>
         private int EvaluateMaterial(Board board)
         {
-            int whiteValue = 0;
-            int blackValue = 0;
+            var pos = board.GetBitboardPosition();
             
-            for (int square = 0; square < 64; square++)
-            {
-                var piece = board.GetPiece(new Square(square));
-                if (piece.IsNull)
-                    continue;
-                
-                int value = PieceValues[(int)piece.PieceType];
-                if (piece.IsWhite)
-                    whiteValue += value;
-                else
-                    blackValue += value;
-            }
+            // Count pieces using bitboard pop count (much faster than loops)
+            int whiteValue = 
+                Bitboard.PopCount(pos.WhitePawns) * PieceValues[1] +     // Pawns
+                Bitboard.PopCount(pos.WhiteKnights) * PieceValues[2] +   // Knights  
+                Bitboard.PopCount(pos.WhiteBishops) * PieceValues[3] +   // Bishops
+                Bitboard.PopCount(pos.WhiteRooks) * PieceValues[4] +     // Rooks
+                Bitboard.PopCount(pos.WhiteQueens) * PieceValues[5];     // Queens
+                // King value not counted (always 1)
+            
+            int blackValue = 
+                Bitboard.PopCount(pos.BlackPawns) * PieceValues[1] +     // Pawns
+                Bitboard.PopCount(pos.BlackKnights) * PieceValues[2] +   // Knights
+                Bitboard.PopCount(pos.BlackBishops) * PieceValues[3] +   // Bishops
+                Bitboard.PopCount(pos.BlackRooks) * PieceValues[4] +     // Rooks
+                Bitboard.PopCount(pos.BlackQueens) * PieceValues[5];     // Queens
+                // King value not counted (always 1)
             
             return whiteValue - blackValue;
         }

@@ -20,22 +20,21 @@ namespace C0BR4ChessEngine.Evaluation
 
         /// <summary>
         /// Calculate game phase as a value between 0.0 (endgame) and 1.0 (opening)
+        /// v3.0: Optimized using bitboards instead of 64-square loop
         /// </summary>
         /// <param name="board">Current board position</param>
         /// <returns>Phase value: 1.0 = opening, 0.5 = middlegame, 0.0 = endgame</returns>
         public static double CalculatePhase(Board board)
         {
-            int currentPhaseValue = 0;
-
-            // Count phase values for all pieces on the board
-            for (int square = 0; square < 64; square++)
-            {
-                var piece = board.GetPiece(new Square(square));
-                if (!piece.IsNull)
-                {
-                    currentPhaseValue += GetPiecePhaseValue(piece.PieceType);
-                }
-            }
+            var pos = board.GetBitboardPosition();
+            
+            // Count phase values using bitboard pop count (much faster)
+            int currentPhaseValue = 
+                Bitboard.PopCount(pos.WhiteKnights | pos.BlackKnights) * KnightPhaseValue +
+                Bitboard.PopCount(pos.WhiteBishops | pos.BlackBishops) * BishopPhaseValue +
+                Bitboard.PopCount(pos.WhiteRooks | pos.BlackRooks) * RookPhaseValue +
+                Bitboard.PopCount(pos.WhiteQueens | pos.BlackQueens) * QueenPhaseValue;
+                // Pawns and kings don't contribute to phase value
 
             // Convert to 0.0-1.0 scale
             double phase = (double)currentPhaseValue / TotalPhaseValue;
