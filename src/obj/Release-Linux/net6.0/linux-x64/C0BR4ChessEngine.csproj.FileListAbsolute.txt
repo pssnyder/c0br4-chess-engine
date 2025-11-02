@@ -1,7 +1,3 @@
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release-Linux\net6.0\linux-x64\C0BR4_v2.9
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release-Linux\net6.0\linux-x64\C0BR4_v2.9.deps.json
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release-Linux\net6.0\linux-x64\C0BR4_v2.9.runtimeconfig.json
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release-Linux\net6.0\linux-x64\C0BR4_v2.9.dll
 S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release-Linux\net6.0\linux-x64\Microsoft.CSharp.dll
 S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release-Linux\net6.0\linux-x64\Microsoft.VisualBasic.Core.dll
 S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release-Linux\net6.0\linux-x64\Microsoft.VisualBasic.dll
@@ -186,7 +182,11 @@ S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\s
 S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release-Linux\net6.0\linux-x64\C0BR4ChessEngine.AssemblyInfo.cs
 S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release-Linux\net6.0\linux-x64\C0BR4ChessEngine.csproj.CoreCompileInputs.cache
 S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release-Linux\net6.0\linux-x64\C0BR4Che.C645DACC.Up2Date
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release-Linux\net6.0\linux-x64\C0BR4_v2.9.dll
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release-Linux\net6.0\linux-x64\refint\C0BR4_v2.9.dll
 S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release-Linux\net6.0\linux-x64\C0BR4ChessEngine.genruntimeconfig.cache
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release-Linux\net6.0\linux-x64\ref\C0BR4_v2.9.dll
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release-Linux\net6.0\linux-x64\C0BR4_v3.1
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release-Linux\net6.0\linux-x64\C0BR4_v3.1.deps.json
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release-Linux\net6.0\linux-x64\C0BR4_v3.1.runtimeconfig.json
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release-Linux\net6.0\linux-x64\C0BR4_v3.1.dll
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release-Linux\net6.0\linux-x64\C0BR4_v3.1.dll
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release-Linux\net6.0\linux-x64\refint\C0BR4_v3.1.dll
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release-Linux\net6.0\linux-x64\ref\C0BR4_v3.1.dll

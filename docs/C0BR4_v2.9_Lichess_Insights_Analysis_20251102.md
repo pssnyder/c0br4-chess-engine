@@ -209,3 +209,99 @@
 - **Queen trade disadvantage**: Significantly worse results when queens are traded (16.6% vs 37.5% win rate)
 - **Move accuracy**: Highest accuracy with King moves (92%), lowest with Rook moves (74.2%)
 - **Time management**: Best tactical awareness in fast moves (82.4% in 0-1 second moves)
+
+## Critical Search Algorithm Defect - Accuracy Degradation with Time
+
+**MAJOR DISCOVERY**: C0BR4's accuracy **degrades significantly** with longer thinking times:
+- 0-1 sec: 84.2% accuracy (baseline)
+- 1-3 sec: 84.8% accuracy (slight improvement)
+- 3-5 sec: 80.9% accuracy (**4% drop**)
+- 5-10 sec: 63.8% accuracy (**20% drop**)
+- 10-30 sec: 56.2% accuracy (**28% drop**)
+
+**Root Cause Analysis**:
+1. **Quiescence Search Flaw**: Currently only searches captures/promotions but **excludes all checking moves**, causing tactical blindness in deeper searches
+2. **Search Explosion**: No late move reductions or advanced pruning techniques - longer searches explore too many irrelevant branches
+3. **Transposition Table Pollution**: Conflicting evaluations from different depths corrupt move selection
+4. **Missing Check Extensions**: Critical tactical sequences involving checks are cut off at horizon
+
+**v3.1 Priority Fixes**:
+1. Enable checking moves in quiescence search (currently commented out in `GetTacticalMoves()`)
+2. Implement late move reductions for non-critical moves at higher depths  
+3. Add aspiration windows to improve search efficiency
+4. Implement null move pruning for better cutoffs
+5. Add futility pruning in near-leaf nodes
+
+This explains why C0BR4 performs better in bullet chess - the shallow searches avoid the algorithm's deep-search weaknesses!
+
+## Positional Play Deficiency - "Drawish Position Passivity"
+
+**Pattern Identified**: C0BR4 shows **excellent accuracy at extremes** but **poor decision-making in balanced positions**:
+
+**Strong Performance (Fighting/Converting)**:
+- 0-10% winning chances: **95.6% accuracy** (excellent defense when losing)
+- 90-100% winning chances: **99.1% accuracy** (perfect conversion of winning positions)
+
+**Weak Performance (Imbalanced but Unclear)**:
+- 30-40% winning chances: **75.5% accuracy** (20% drop from extremes)
+- 40-50% winning chances: **74.6% accuracy** (25% drop from extremes)
+
+**Strategic Implication**: C0BR4 is too passive in "slightly favorable but unclear" positions - exactly where games are won or lost. The engine maintains equality instead of creating winning chances.
+
+**v3.1 Positional Enhancement Goals**:
+1. **Drawishness Detection**: Identify positions with evaluation near 0.00 and encourage activity over equality
+2. **Exchange Evaluation**: Bonus for piece trades that lead to favorable pawn endgames or king activity
+3. **Activity Over Material**: In balanced positions, prioritize piece mobility and central control
+4. **Pawn Break Incentives**: Encourage central pawn advances (d4/d5, e4/e5) to open closed positions
+5. **King Activity Bonuses**: Reward active king play in simplified middlegames/endgames
+6. **Anti-Stalemate Logic**: Prefer dynamic complexity over sterile draws in balanced positions
+
+**Target**: Improve accuracy in 30-50% winning chance positions from ~75% to 85%+ by making C0BR4 more "fighting" and less "drawish".
+
+## Opening Book Performance Analysis - Book Quality Crisis
+
+**CRITICAL DISCOVERY**: Opening book coverage does NOT guarantee performance! Major quality issues identified:
+
+### Opening Family Performance vs Book Status
+
+| Opening Family | Victory % | Draw % | Defeat % | Games | Book Status | Assessment |
+|---------------|-----------|--------|-----------|-------|-------------|------------|
+| **Dutch Defense** | **42.9%** | 21.4% | 35.7% | 42 | ✅ Programmed | **EXCELLENT** |
+| **Vienna Game** | **25%** | 0% | **75%** | 8 | ✅ Programmed | **DISASTER** |
+| **Caro-Kann Defense** | **18.3%** | 45.1% | 36.6% | 71 | ✅ Programmed | **POOR** |
+| **Queen's Pawn Game** | **20.5%** | 18.1% | 61.4% | 83 | ❌ Missing | **POOR** |
+
+### Key Insights
+
+1. **Dutch Defense Success**: 42.9% win rate proves good opening book lines work
+2. **Vienna Game Disaster**: 25% win rate (75% defeat!) suggests **fundamentally flawed book lines**
+3. **Caro-Kann Failure**: 18.3% win rate despite being programmed - **book quality issue**
+4. **Queen's Pawn Gap**: Large sample (83 games) with poor results - **coverage gap**
+
+## v3.1 Incremental Development Plan
+
+**Following New Release Process: ONE CHANGE AT A TIME**
+
+### Phase 1: Vienna Game Emergency Fix (Immediate)
+- **Problem**: 75% defeat rate with programmed lines (catastrophic)
+- **Sample Size**: Small (8 games) but 100% negative trend
+- **Action**: Debug existing Vienna lines or replace with solid alternative
+- **Expected Impact**: Eliminate worst-performing opening system
+
+### Phase 2: Enable Quiescence Checking Moves (High Impact)
+- **Problem**: Accuracy degrades with longer thinking time
+- **Root Cause**: Checks disabled in quiescence search
+- **Action**: One-line fix to enable checking moves in `GetTacticalMoves()`
+- **Expected Impact**: Fix deep search tactical blindness
+
+### Phase 3: Queen's Pawn Coverage (Largest Sample)
+- **Problem**: 83 games with 20.5% win rate, no book coverage
+- **Action**: Add basic Queen's Pawn Game responses
+- **Expected Impact**: Improve most frequent problematic opening
+
+### Phase 4: Caro-Kann Book Quality Review
+- **Problem**: 71 games with 18.3% win rate despite book coverage
+- **Action**: Analyze and improve existing Caro-Kann lines
+- **Expected Impact**: Fix second-largest sample of poor results
+
+**Development Principle**: Test each change independently with battle testing before proceeding to next phase.

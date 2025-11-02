@@ -18,7 +18,7 @@ namespace C0BR4ChessEngine.UCI
         private Board board = new();
         private IChessBot bot = new TranspositionSearchBot(); // v0.6: Alpha-beta with move ordering, quiescence, and transposition table
         private bool isRunning = true;
-        private const string EngineVersion = "v2.9";
+        private const string EngineVersion = "v3.1";
 
         public UCIEngine()
         {

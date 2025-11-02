@@ -5,13 +5,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>C0BR4_v2.9</AssemblyName>
+    <AssemblyName>C0BR4_v3.1</AssemblyName>
     <RootNamespace>C0BR4ChessEngine</RootNamespace>
-    <AssemblyVersion>2.9.0.0</AssemblyVersion>
-    <FileVersion>2.9.0.0</FileVersion>
-    <Version>2.9.0</Version>
+    <AssemblyVersion>3.1.0.0</AssemblyVersion>
+    <FileVersion>3.1.0.0</FileVersion>
+    <Version>3.1.0</Version>
     <Authors>C0BR4 Chess Engine Project</Authors>
-    <Description>C0BR4 UCI Chess Engine v2.9 - Enhanced UCI Output with Full Principal Variation</Description>
+    <Description>C0BR4 UCI Chess Engine v3.1 - Data-Driven Opening Book Improvements</Description>
     <Copyright>2025</Copyright>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>

@@ -27,17 +27,19 @@ namespace C0BR4ChessEngine.Opening
         };
         #endregion
 
-        #region Vienna Gambit (White with e4)
-        private static readonly string[][] ViennaGambitLines = new string[][]
+        #region Vienna System (Fixed Lines - Less Aggressive)
+        private static readonly string[][] ViennaSystemLines = new string[][]
         {
-            // Main Vienna Gambit lines
-            new[] { "e4", "Nc3", "f4", "Nf3" },
-            new[] { "e4", "Nc3", "Bc4", "f4" },
-            new[] { "e4", "Nc3", "f4", "Bc4", "Nf3" },
+            // Solid Vienna Game (non-gambit) - MUCH SAFER
+            new[] { "e4", "Nc3", "Nf3", "Bc4" },      // Vienna Game proper
+            new[] { "e4", "Nc3", "Bc4", "Nf3" },      // Bishop first development
+            new[] { "e4", "Nc3", "Nf3", "Bb5" },      // Vienna with Bb5
+            new[] { "e4", "Nc3", "f4", "Nf3", "Bb5" }, // Vienna Gambit only if absolutely safe
             
-            // Vienna Game proper (less aggressive)
-            new[] { "e4", "Nc3", "Nf3", "Bc4" },
-            new[] { "e4", "Nc3", "Bc4", "Nf3" },
+            // Safe responses to various Black setups
+            new[] { "e4", "Nc3", "Nf3", "Bc4", "d3" },    // vs ...Bc5
+            new[] { "e4", "Nc3", "Bb5", "Nf3", "O-O" },   // vs ...Nc6 
+            new[] { "e4", "Nc3", "Nf3", "d4" },           // Central control
         };
         #endregion
 
@@ -71,7 +73,38 @@ namespace C0BR4ChessEngine.Opening
             
             // Stonewall Dutch
             new[] { "f5", "e6", "d5", "Bd6", "Nf6" },
-            new[] { "f5", "e6", "Nf6", "d5", "Bd6" },
+        };
+        #endregion
+
+        #region Queen's Pawn Game Responses (Coverage Gap Fix)
+        private static readonly string[][] QueensPawnGameLines = new string[][]
+        {
+            // Anti-Torre Defense responses (70.8% accuracy issue)
+            new[] { "d5", "Nf6", "e6", "c5" },        // Classical Anti-Torre
+            new[] { "d5", "Nf6", "e6", "Ne4" },       // Active Anti-Torre
+            new[] { "d5", "Nf6", "c5", "e6" },        // Counter-attacking setup
+            
+            // Queen's Gambit Declined responses
+            new[] { "d5", "e6", "Nf6", "Be7" },       // Classical QGD
+            new[] { "d5", "e6", "c6", "Nf6" },        // Solid development
+            
+            // Semi-Slav responses
+            new[] { "d5", "c6", "e6", "Nf6" },        // Semi-Slav setup
+            new[] { "d5", "c6", "Nf6", "e6" },        // Flexible order
+        };
+        #endregion
+
+        #region Sicilian Defense Responses (Coverage Gap Fix)
+        private static readonly string[][] SicilianDefenseLines = new string[][]
+        {
+            // Open Sicilian responses (when Black plays 1...c5)
+            new[] { "Nf3", "d6", "d4", "cxd4", "Nxd4" },    // Open Sicilian
+            new[] { "Nf3", "Nc6", "d4", "cxd4", "Nxd4" },   // Accelerated Dragon
+            new[] { "Nf3", "g6", "d4", "cxd4", "Nxd4" },    // Hyperaccelerated Dragon
+            
+            // Closed Sicilian alternative
+            new[] { "Nc3", "Nc6", "g3", "g6", "Bg2" },      // Closed Sicilian system
+            new[] { "Nc3", "d6", "g3", "g6", "Bg2" },       // Fianchetto system
         };
         #endregion
 
@@ -216,9 +249,11 @@ namespace C0BR4ChessEngine.Opening
         {
             var allLines = new List<string[]>();
             allLines.AddRange(LondonSystemLines);
-            allLines.AddRange(ViennaGambitLines);
+            allLines.AddRange(ViennaSystemLines);
             allLines.AddRange(CaroKannLines);
             allLines.AddRange(DutchDefenseLines);
+            allLines.AddRange(QueensPawnGameLines);
+            allLines.AddRange(SicilianDefenseLines);
             return allLines.ToArray();
         }
 
@@ -306,15 +341,19 @@ namespace C0BR4ChessEngine.Opening
             var stats = new StringBuilder();
             stats.AppendLine($"Opening Book Statistics:");
             stats.AppendLine($"London System lines: {LondonSystemLines.Length}");
-            stats.AppendLine($"Vienna Gambit lines: {ViennaGambitLines.Length}");
+            stats.AppendLine($"Vienna System lines: {ViennaSystemLines.Length}");
             stats.AppendLine($"Caro-Kann lines: {CaroKannLines.Length}");
             stats.AppendLine($"Dutch Defense lines: {DutchDefenseLines.Length}");
+            stats.AppendLine($"Queen's Pawn Game lines: {QueensPawnGameLines.Length}");
+            stats.AppendLine($"Sicilian Defense lines: {SicilianDefenseLines.Length}");
             stats.AppendLine($"Position-specific moves: {PositionMoves.Count}");
             
             int totalMoves = LondonSystemLines.Sum(line => line.Length) +
-                           ViennaGambitLines.Sum(line => line.Length) +
+                           ViennaSystemLines.Sum(line => line.Length) +
                            CaroKannLines.Sum(line => line.Length) +
-                           DutchDefenseLines.Sum(line => line.Length);
+                           DutchDefenseLines.Sum(line => line.Length) +
+                           QueensPawnGameLines.Sum(line => line.Length) +
+                           SicilianDefenseLines.Sum(line => line.Length);
             
             stats.AppendLine($"Total book moves: {totalMoves}");
             
