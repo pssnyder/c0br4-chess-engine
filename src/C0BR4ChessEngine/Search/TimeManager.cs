@@ -20,16 +20,13 @@ namespace C0BR4ChessEngine.Search
         }
 
         /// <summary>
-        /// Calculate optimal time allocation for the current move with v3.0 enhancements
+        /// Calculate optimal time allocation for the current move
         /// </summary>
         /// <param name="timeControl">Time control parameters</param>
         /// <param name="isWhiteToMove">Whether white is to move</param>
         /// <param name="gamePhase">Estimated game phase (0.0 = endgame, 1.0 = opening)</param>
-        /// <param name="lastEval">Last position evaluation to guide time allocation</param>
-        /// <param name="evalStability">How stable the evaluation has been</param>
         /// <returns>Recommended time allocation in milliseconds</returns>
-        public static int CalculateTimeAllocation(TimeControl timeControl, bool isWhiteToMove, double gamePhase = 0.5, 
-            int lastEval = 0, double evalStability = 1.0)
+        public static int CalculateTimeAllocation(TimeControl timeControl, bool isWhiteToMove, double gamePhase = 0.5)
         {
             // Fixed time per move has highest priority
             if (timeControl.MoveTime > 0)
@@ -81,10 +78,6 @@ namespace C0BR4ChessEngine.Search
             double phaseMultiplier = CalculatePhaseMultiplier(gamePhase);
             baseTime = (int)(baseTime * phaseMultiplier);
 
-            // v3.0: Apply evaluation-based time adjustments
-            double evalMultiplier = CalculateEvalMultiplier(lastEval, evalStability);
-            baseTime = (int)(baseTime * evalMultiplier);
-
             // Apply safety margins
             baseTime = ApplySafetyMargins(baseTime, remainingTime);
 
@@ -114,40 +107,6 @@ namespace C0BR4ChessEngine.Search
                 return 1.2;
             else // Endgame
                 return 0.8;
-        }
-
-        /// <summary>
-        /// v3.0: Calculate time multiplier based on position evaluation and stability
-        /// </summary>
-        private static double CalculateEvalMultiplier(int lastEval, double evalStability)
-        {
-            // Base multiplier
-            double multiplier = 1.0;
-
-            // If evaluation is very good (>+300cp), play faster to avoid complications
-            if (Math.Abs(lastEval) > 300)
-            {
-                multiplier *= 0.7; // Play 30% faster when clearly winning/losing
-            }
-            // If evaluation is close (within ±50cp), think longer for precision
-            else if (Math.Abs(lastEval) < 50)
-            {
-                multiplier *= 1.3; // Think 30% longer in close positions
-            }
-
-            // If evaluation is unstable (changing rapidly), think longer
-            if (evalStability < 0.5)
-            {
-                multiplier *= 1.4; // Think 40% longer when position is unclear
-            }
-            // If evaluation is very stable, can think a bit faster
-            else if (evalStability > 0.9)
-            {
-                multiplier *= 0.9; // Think 10% faster when position is clear
-            }
-
-            // Clamp multiplier to reasonable bounds
-            return Math.Max(0.5, Math.Min(2.0, multiplier));
         }
 
         /// <summary>

@@ -7,43 +7,21 @@ namespace C0BR4ChessEngine.Search
 {
     /// <summary>
     /// Alpha-beta search with move ordering, quiescence search, and transposition table
-    /// v3.0: Enhanced with killer moves and history heuristic for improved performance
+    /// Transposition table caches previously computed positions to avoid re-search
     /// </summary>
     public class TranspositionSearchBot : IChessBot
     {
         private readonly SimpleEvaluator evaluator = new();
         private readonly TranspositionTable transpositionTable = new(100000); // 100K entries
-        private readonly KillerMoves killerMoves = new(); // v3.0: Killer move heuristic
-        private readonly HistoryTable historyTable = new(); // v3.0: History heuristic
         private long nodesSearched = 0;
         private long quiescenceNodes = 0;
-        private int searchDepth = 6; // v3.0: Enhanced default search depth
-        private int maxDepth = 10; // v3.0: Target maximum depth for iterative deepening
+        private int searchDepth = 4; // Default search depth
         private List<Move> currentPV = new(); // Principal variation line
-        private List<Move> lastOpponentPV = new(); // v3.0: Track opponent's expected PV
-        private Move lastOurMove = Move.NullMove; // v3.0: Track our last move for PV followup
 
         public Move Think(Board board, TimeSpan timeLimit)
         {
             nodesSearched = 0;
             quiescenceNodes = 0;
-            
-            // v3.0: Clear killer moves and age history at start of search
-            killerMoves.Clear();
-            historyTable.Age();
-            
-            // v3.0: PV Fast Followup - check if opponent played into our predicted line
-            if (ShouldUsePVFollowup(board))
-            {
-                var pvMove = GetNextPVMove();
-                if (pvMove != Move.NullMove && board.IsLegalMove(pvMove))
-                {
-                    Console.WriteLine($"info string PV followup: using predicted move {pvMove}");
-                    lastOurMove = pvMove;
-                    return pvMove;
-                }
-            }
-            
             currentPV.Clear();
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
             
@@ -58,16 +36,10 @@ namespace C0BR4ChessEngine.Search
             Move bestMove = legalMoves[0];
             int bestScore = -50000;
             
-            // Enhanced iterative deepening search - target depth 10
-            int maxSearchDepth = Math.Min(maxDepth, searchDepth + 4); // Allow up to 4 extra plies based on time
-            for (int depth = 1; depth <= maxSearchDepth; depth++)
+            // Iterative deepening search
+            for (int depth = 1; depth <= searchDepth; depth++)
             {
-                // Smart time allocation: reserve time for deeper searches
-                double timeUsedRatio = (double)stopwatch.ElapsedMilliseconds / timeLimit.TotalMilliseconds;
-                double progressRatio = (double)depth / maxSearchDepth;
-                
-                // If we're using time faster than progress, be more conservative
-                if (timeUsedRatio > progressRatio * 0.7 && depth > searchDepth)
+                if (stopwatch.Elapsed >= timeLimit)
                     break;
                     
                 var (move, score, pv) = SearchWithPV(board, depth);
@@ -448,46 +420,6 @@ namespace C0BR4ChessEngine.Search
         public void ClearTranspositionTable()
         {
             transpositionTable.Clear();
-        }
-
-        /// <summary>
-        /// v3.0: Check if we should use PV followup instead of full search
-        /// </summary>
-        private bool ShouldUsePVFollowup(Board board)
-        {
-            // Only use PV followup if we have a stored PV and it's not our first move
-            if (currentPV.Count < 2 || lastOurMove.IsNull)
-                return false;
-
-            // Check if the opponent played the move we expected (first move in our PV after our move)
-            // This is a simplified check - in a full implementation, we'd track the full game history
-            return currentPV.Count > 1; // For now, just check if we have a multi-move PV
-        }
-
-        /// <summary>
-        /// v3.0: Get the next move from our stored PV
-        /// </summary>
-        private Move GetNextPVMove()
-        {
-            // Return the next move in our PV sequence
-            // In a full implementation, we'd need to track which move in the PV we should use
-            if (currentPV.Count >= 2)
-                return currentPV[1]; // Return our next planned move
-            
-            return Move.NullMove;
-        }
-
-        /// <summary>
-        /// v3.0: Update PV tracking after making a move
-        /// </summary>
-        public void UpdatePVTracking(Move ourMove)
-        {
-            lastOurMove = ourMove;
-            // Shift PV to account for moves played
-            if (currentPV.Count >= 2)
-            {
-                currentPV.RemoveRange(0, 2); // Remove our move and opponent's expected response
-            }
         }
     }
 }

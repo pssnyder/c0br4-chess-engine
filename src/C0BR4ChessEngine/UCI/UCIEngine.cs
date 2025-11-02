@@ -18,7 +18,7 @@ namespace C0BR4ChessEngine.UCI
         private Board board = new();
         private IChessBot bot = new TranspositionSearchBot(); // v0.6: Alpha-beta with move ordering, quiescence, and transposition table
         private bool isRunning = true;
-        private const string EngineVersion = "v3.0";
+        private const string EngineVersion = "v2.9";
 
         public UCIEngine()
         {
@@ -77,13 +77,6 @@ namespace C0BR4ChessEngine.UCI
                 case "perft":
                     RunPerft(parts);
                     break;
-                case "perftdivide":
-                case "divide":
-                    RunPerftDivide(parts);
-                    break;
-                case "perftbench":
-                    RunPerftBenchmark();
-                    break;
                 case "eval":
                     RunEval();
                     break;
@@ -115,7 +108,7 @@ namespace C0BR4ChessEngine.UCI
         private void HandleUCI()
         {
             Console.WriteLine($"id name C0BR4 {EngineVersion}");
-            Console.WriteLine("id author Pat Snyder");
+            Console.WriteLine("id author C0BR4 Developer");
             // TODO: Add UCI options here
             Console.WriteLine("uciok");
         }
@@ -409,31 +402,12 @@ namespace C0BR4ChessEngine.UCI
                 var stopwatch = System.Diagnostics.Stopwatch.StartNew();
                 long nodes = PerformanceBenchmark.Perft(board, depth);
                 stopwatch.Stop();
-                double nps = stopwatch.ElapsedMilliseconds > 0 ? nodes * 1000.0 / stopwatch.ElapsedMilliseconds : 0;
-                Console.WriteLine($"Perft({depth}): {nodes:N0} nodes in {stopwatch.ElapsedMilliseconds}ms ({nps:N0} nps)");
+                Console.WriteLine($"Perft({depth}): {nodes} nodes in {stopwatch.ElapsedMilliseconds}ms");
             }
             else
             {
                 PerformanceBenchmark.RunPerftTests();
             }
-        }
-
-        private void RunPerftDivide(string[] parts)
-        {
-            if (parts.Length > 1 && int.TryParse(parts[1], out int depth))
-            {
-                PerformanceBenchmark.PerftDivide(board, depth);
-            }
-            else
-            {
-                Console.WriteLine("Usage: perftdivide <depth> (e.g., perftdivide 3)");
-                Console.WriteLine("Shows node count for each legal move from current position");
-            }
-        }
-
-        private void RunPerftBenchmark()
-        {
-            PerformanceBenchmark.BenchmarkPerft();
         }
 
         private bool TryParseAndApplyMove(string moveString)

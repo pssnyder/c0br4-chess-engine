@@ -8,38 +8,34 @@ namespace C0BR4ChessEngine.Evaluation
     /// </summary>
     public static class KingSafety
     {
-        // v3.0: Enhanced safety penalties in centipawns
-        private const int ExposedKingPenalty = 35;        // Increased: King without pawn shelter
-        private const int WeakPawnShieldPenalty = 20;     // Increased: Damaged pawn shield  
-        private const int OpenFileNearKingPenalty = 25;   // Increased: Open file adjacent to king
-        private const int EnemyPieceNearKingPenalty = 8;  // Increased: Enemy piece attacking near king
-        private const int CastlingBonus = 25;             // Increased: Bonus for having castled
-        private const int AdvancedPawnShieldPenalty = 15; // Increased: Pawns too far advanced
-        private const int BackRankWeaknessPenalty = 30;   // New: Back rank mate vulnerability
-        private const int KingInCenterPenalty = 40;       // New: King in center during middlegame
+        // Safety penalties in centipawns
+        private const int ExposedKingPenalty = 20;        // King without pawn shelter
+        private const int WeakPawnShieldPenalty = 10;     // Damaged pawn shield
+        private const int OpenFileNearKingPenalty = 15;   // Open file adjacent to king
+        private const int EnemyPieceNearKingPenalty = 5;  // Enemy piece attacking near king
+        private const int CastlingBonus = 15;             // Bonus for having castled
+        private const int AdvancedPawnShieldPenalty = 8;  // Pawns too far advanced
 
-        // v3.0: Enhanced attack weights by piece type
+        // Attack weights by piece type
         private static readonly Dictionary<PieceType, int> AttackWeights = new()
         {
-            { PieceType.Pawn, 2 },      // Increased from 1
-            { PieceType.Knight, 3 },    // Increased from 2  
-            { PieceType.Bishop, 3 },    // Increased from 2
-            { PieceType.Rook, 5 },      // Increased from 3
-            { PieceType.Queen, 8 }      // Increased from 4
+            { PieceType.Pawn, 1 },
+            { PieceType.Knight, 2 },
+            { PieceType.Bishop, 2 },
+            { PieceType.Rook, 3 },
+            { PieceType.Queen, 4 }
         };
 
         /// <summary>
-        /// v3.0: Enhanced king safety evaluation for both sides
+        /// Evaluate king safety for both sides
         /// </summary>
         /// <param name="board">Current board position</param>
-        /// <param name="gamePhase">Game phase (0.0 = endgame, 1.1 = opening)</param>
+        /// <param name="gamePhase">Game phase (0.0 = endgame, 1.0 = opening)</param>
         /// <returns>Evaluation from white's perspective</returns>
         public static int Evaluate(Board board, double gamePhase)
         {
-            // v3.0: King safety is critical in middlegame, moderate in opening, minimal in endgame
-            double safetyWeight = gamePhase > 0.7 ? 0.6 :      // Opening: 60% weight
-                                  gamePhase > 0.3 ? 1.2 :      // Middlegame: 120% weight (increased)
-                                  0.2;                          // Endgame: 20% weight
+            // King safety is much more important in middlegame
+            double safetyWeight = 0.3 + gamePhase * 0.7; // 30-100% weight
 
             int whiteEval = EvaluateKingSafetyForSide(board, true, gamePhase);
             int blackEval = EvaluateKingSafetyForSide(board, false, gamePhase);
@@ -344,20 +340,18 @@ namespace C0BR4ChessEngine.Evaluation
 
         /// <summary>
         /// Find the king for a given side
-        /// v3.0: Optimized using bitboards instead of 64-square loop
         /// </summary>
         private static Piece FindKing(Board board, bool isWhite)
         {
-            var pos = board.GetBitboardPosition();
-            ulong kingBitboard = isWhite ? pos.WhiteKing : pos.BlackKing;
-            
-            if (kingBitboard != 0)
+            for (int square = 0; square < 64; square++)
             {
-                int kingSquare = Bitboard.LSB(kingBitboard);
-                return new Piece(PieceType.King, isWhite, new Square(kingSquare));
+                var piece = board.GetPiece(new Square(square));
+                if (!piece.IsNull && piece.IsWhite == isWhite && piece.PieceType == PieceType.King)
+                {
+                    return piece;
+                }
             }
-            
-            return new Piece(); // Null piece (should never happen in valid position)
+            return new Piece(); // Null piece
         }
 
         /// <summary>

@@ -164,68 +164,24 @@ namespace C0BR4ChessEngine.Evaluation
 
         /// <summary>
         /// Get total piece-square table evaluation for the position
-        /// v3.0: Optimized using bitboards instead of 64-square loop
         /// </summary>
         /// <param name="board">Current board position</param>
         /// <param name="gamePhase">Game phase (0.0 = endgame, 1.0 = opening)</param>
         /// <returns>Total PST evaluation from white's perspective</returns>
         public static int EvaluatePosition(Board board, double gamePhase)
         {
-            var pos = board.GetBitboardPosition();
             int totalValue = 0;
 
-            // Process each piece type using bitboard iteration
-            totalValue += EvaluatePieceType(pos.WhitePawns, PieceType.Pawn, true, gamePhase);
-            totalValue += EvaluatePieceType(pos.BlackPawns, PieceType.Pawn, false, gamePhase);
-            
-            totalValue += EvaluatePieceType(pos.WhiteKnights, PieceType.Knight, true, gamePhase);
-            totalValue += EvaluatePieceType(pos.BlackKnights, PieceType.Knight, false, gamePhase);
-            
-            totalValue += EvaluatePieceType(pos.WhiteBishops, PieceType.Bishop, true, gamePhase);
-            totalValue += EvaluatePieceType(pos.BlackBishops, PieceType.Bishop, false, gamePhase);
-            
-            totalValue += EvaluatePieceType(pos.WhiteRooks, PieceType.Rook, true, gamePhase);
-            totalValue += EvaluatePieceType(pos.BlackRooks, PieceType.Rook, false, gamePhase);
-            
-            totalValue += EvaluatePieceType(pos.WhiteQueens, PieceType.Queen, true, gamePhase);
-            totalValue += EvaluatePieceType(pos.BlackQueens, PieceType.Queen, false, gamePhase);
-            
-            totalValue += EvaluatePieceType(pos.WhiteKing, PieceType.King, true, gamePhase);
-            totalValue += EvaluatePieceType(pos.BlackKing, PieceType.King, false, gamePhase);
+            for (int square = 0; square < 64; square++)
+            {
+                var piece = board.GetPiece(new Square(square));
+                if (!piece.IsNull)
+                {
+                    totalValue += GetPieceSquareValue(piece, gamePhase);
+                }
+            }
 
             return totalValue;
-        }
-
-        /// <summary>
-        /// Evaluate a specific piece type using bitboard iteration
-        /// </summary>
-        private static int EvaluatePieceType(ulong pieceBitboard, PieceType pieceType, bool isWhite, double gamePhase)
-        {
-            int value = 0;
-            ulong pieces = pieceBitboard;
-            
-            while (pieces != 0)
-            {
-                int square = Bitboard.PopLSB(ref pieces);
-                
-                // Get interpolated PST value
-                int middlegameValue = GetMiddlegameValue(pieceType, isWhite ? square : FlipSquare(square));
-                int endgameValue = GetEndgameValue(pieceType, isWhite ? square : FlipSquare(square));
-                
-                int pstValue = (int)(middlegameValue * gamePhase + endgameValue * (1.0 - gamePhase));
-                
-                value += isWhite ? pstValue : -pstValue;
-            }
-            
-            return value;
-        }
-
-        /// <summary>
-        /// Flip square for black pieces (black pieces use flipped tables)
-        /// </summary>
-        private static int FlipSquare(int square)
-        {
-            return square ^ 56; // Flip rank (XOR with 56)
         }
 
         private static int GetMiddlegameValue(PieceType pieceType, int square)

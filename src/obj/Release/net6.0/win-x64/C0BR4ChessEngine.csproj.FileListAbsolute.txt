@@ -226,10 +226,10 @@ S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\s
 S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release\net6.0\win-x64\msquic.dll
 S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release\net6.0\win-x64\ucrtbase.dll
 S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release\net6.0\win-x64\C0BR4Che.C645DACC.Up2Date
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release\net6.0\win-x64\C0BR4_v3.0.exe
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release\net6.0\win-x64\C0BR4_v3.0.deps.json
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release\net6.0\win-x64\C0BR4_v3.0.runtimeconfig.json
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release\net6.0\win-x64\C0BR4_v3.0.dll
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release\net6.0\win-x64\C0BR4_v3.0.dll
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release\net6.0\win-x64\refint\C0BR4_v3.0.dll
-S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release\net6.0\win-x64\ref\C0BR4_v3.0.dll
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release\net6.0\win-x64\C0BR4_v2.9.exe
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release\net6.0\win-x64\C0BR4_v2.9.deps.json
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release\net6.0\win-x64\C0BR4_v2.9.runtimeconfig.json
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\bin\Release\net6.0\win-x64\C0BR4_v2.9.dll
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release\net6.0\win-x64\C0BR4_v2.9.dll
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release\net6.0\win-x64\refint\C0BR4_v2.9.dll
+S:\Maker Stuff\Programming\Chess Engines\C0BR4 Chess Engine\cobra-chess-engine\src\obj\Release\net6.0\win-x64\ref\C0BR4_v2.9.dll
