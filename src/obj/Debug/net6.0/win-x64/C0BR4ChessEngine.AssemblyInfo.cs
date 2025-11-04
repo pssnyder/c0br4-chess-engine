@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCopyrightAttribute("2025")]
 [assembly: System.Reflection.AssemblyDescriptionAttribute("C0BR4 UCI Chess Engine v3.1 - Data-Driven Opening Book Improvements")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("3.1.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.1.0+cd8eaa1fa160ac5e801b4f41e0c7190166f0a91f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("3.1.0+86f5b4aa84a837c0d17767e1e1ab5cf502437648")]
 [assembly: System.Reflection.AssemblyProductAttribute("C0BR4_v3.1")]
 [assembly: System.Reflection.AssemblyTitleAttribute("C0BR4_v3.1")]
 [assembly: System.Reflection.AssemblyVersionAttribute("3.1.0.0")]
