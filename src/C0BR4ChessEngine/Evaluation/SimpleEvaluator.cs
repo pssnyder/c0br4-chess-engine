@@ -33,6 +33,9 @@ namespace C0BR4ChessEngine.Evaluation
             evaluation += CastlingIncentive.Evaluate(board, gamePhase);
             evaluation += CastlingRights.Evaluate(board, gamePhase);
             
+            // Pure pawn endgame evaluation (v3.2 enhancement)
+            evaluation += PawnEndgame.Evaluate(board, gamePhase);
+            
             // Return from perspective of side to move
             return board.IsWhiteToMove ? evaluation : -evaluation;
         }
