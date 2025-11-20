@@ -1,13 +1,13 @@
-# C0BR4 Chess Engine v2.9
+# C0BR4 Chess Engine v3.2
 
 A modern **production-ready** chess engine written in C# with UCI (Universal Chess Interface) support. Features **dual-layer architecture** with bitboard performance and proven tournament reliability.
 
-## 🎯 Current Status: v2.9 Stable (Production)
+## 🎯 Current Status: v3.2 Stable (Production)
 
-**C0BR4 v2.9 is battle-tested and running 24/7 in cloud production**. This version provides proven tournament performance with comprehensive evaluation and reliable move generation.
+**C0BR4 v3.2 is battle-tested and running 24/7 in cloud production**. This version provides proven tournament performance with comprehensive evaluation, reliable move generation, and enhanced pawn endgame knowledge.
 
 ### Production Deployment
-- ✅ **Cloud Ready** - Native Linux build running on GCP
+- ✅ **Cloud Ready** - Native Linux build running on GCP (e2-small)
 - ✅ **24/7 Operation** - Proven stability in production environment
 - ✅ **Tournament Tested** - Active on Lichess with consistent ELO performance
 - ✅ **Dual Platform** - Windows (development) + Linux (cloud deployment)
@@ -15,9 +15,10 @@ A modern **production-ready** chess engine written in C# with UCI (Universal Che
 ### Key Features
 - ✅ **Bitboard Core** - High-performance move generation with magic bitboards
 - ✅ **UCI Compliant** - Full Universal Chess Interface protocol support
-- ✅ **Opening Book** - Integrated book with mainline variations
+- ✅ **Opening Book** - Data-driven book with 188 moves (v3.1)
 - ✅ **Advanced Search** - Alpha-beta with transposition table and move ordering
 - ✅ **Multi-Phase Evaluation** - Game phase detection with specialized endgame logic
+- ✅ **Pawn Endgame Mastery** - Aggressive pawn pushing with unstoppable pawn detection (v3.2)
 
 ## 🚨 CRITICAL: Release Process & Regression Prevention
 
@@ -91,8 +92,9 @@ If regression is discovered:
 - **Multi-Component**: Material + Piece-Square Tables + Advanced features
 - **Game Phase Detection**: Opening/Middlegame/Endgame transitions
 - **King Safety**: Position-based safety evaluation
-- **Endgame Specialization**: Advanced endgame heuristics
-- **Opening Book**: Integrated book with 5-8 move depth
+- **Endgame Specialization**: Advanced endgame heuristics with king activity
+- **Pawn Endgame Mastery**: Unstoppable pawn detection, pawn races, king support (v3.2)
+- **Opening Book**: Data-driven book with 188 moves across 6 opening families (v3.1)
 
 ### Production Infrastructure
 - **Cloud Deployment**: Native Linux builds for GCP
@@ -102,54 +104,56 @@ If regression is discovered:
 
 ## Performance & Validation
 
-### Current Benchmarks (v2.9)
+### Current Benchmarks (v3.2)
 Test position: `r3k2r/p1ppqpb1/Bn2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R w KQkq - 0 1`
 
 | Component | Performance | Status |
 |-----------|-------------|---------|
 | **Move Generation** | 7000+ NPS | ✅ Optimized |
 | **Search Depth** | 4-6 default, 10+ capable | ✅ Scalable |
-| **Opening Book** | 5-8 moves deep | ✅ Integrated |
+| **Opening Book** | 188 moves, 6 families | ✅ Enhanced (v3.1) |
+| **Pawn Endgames** | Unstoppable pawn detection | ✅ Enhanced (v3.2) |
 | **Time Management** | No forfeit issues | ✅ Reliable |
-| **Cloud Performance** | 24/7 operation | ✅ Proven |
+| **Cloud Performance** | 24/7 operation on e2-small | ✅ Proven |
 
 ### Quality Assurance
 
 #### Built-in Testing Commands
 ```bash
 # Performance benchmark
-echo "bench" | ./C0BR4_v2.9.exe
+echo "bench" | ./C0BR4_v3.2.exe
 
 # Move generation validation
-echo "perft 4" | ./C0BR4_v2.9.exe
+echo "perft 4" | ./C0BR4_v3.2.exe
 
 # Position evaluation test
-echo "eval" | ./C0BR4_v2.9.exe
+echo "eval" | ./C0BR4_v3.2.exe
 
 # Opening book validation
-echo "testbook" | ./C0BR4_v2.9.exe
+echo "testbook" | ./C0BR4_v3.2.exe
 ```
 
 #### Regression Testing
 ```bash
 # Battle test against previous version
-./engine_battle.sh C0BR4_v2.9.exe C0BR4_v3.0-candidate.exe
+./engine_battle.sh C0BR4_v3.2.exe C0BR4_v3.3-candidate.exe
 
 # Opening position validation
-echo "position startpos moves e2e4 e7e5" | ./C0BR4_v2.9.exe
+echo "position startpos moves e2e4 e7e5" | ./C0BR4_v3.2.exe
 # Should suggest: Bc4, Nf3, d3, f4, etc.
 # Should NEVER suggest: Qh5 (regression indicator)
 
 # Time management test
-echo "go movetime 1000" | ./C0BR4_v2.9.exe
+echo "go movetime 1000" | ./C0BR4_v3.2.exe
 # Should respond within time limit
 ```
 
 ### Production Monitoring
-- **Cloud Instance**: c0br4-production-bot on GCP
+- **Cloud Instance**: c0br4-production-bot on GCP (e2-small, 2GB RAM)
 - **Uptime**: 99.95% SLA with auto-restart
 - **Performance**: Real-time monitoring via unified dashboard
 - **Game Records**: Persistent storage with automated backups
+- **Version**: v3.2 with enhanced pawn endgame evaluation
 
 ## Build Instructions
 
@@ -174,7 +178,7 @@ dotnet build -c Release
 
 # Run from build output
 cd bin/Release/net6.0/win-x64
-./C0BR4_v2.9.exe
+./C0BR4_v3.2.exe
 ```
 
 ### Production Build (Linux Cloud)
@@ -184,15 +188,15 @@ dotnet build -c Release-Linux
 
 # Output location
 cd bin/Release-Linux/net6.0/linux-x64
-./C0BR4_v2.9  # Native Linux executable
+./C0BR4_v3.2  # Native Linux executable
 ```
 
 ### Version Management
 ```bash
 # Update version for new release
 # 1. Edit src/C0BR4ChessEngine.csproj:
-#    <AssemblyName>C0BR4_v2.10</AssemblyName>
-#    <Version>2.10.0</Version>
+#    <AssemblyName>C0BR4_v3.3</AssemblyName>
+#    <Version>3.3.0</Version>
 
 # 2. Update CHECKLIST.md with new features
 # 3. Follow release process checklist above
@@ -203,10 +207,10 @@ cd bin/Release-Linux/net6.0/linux-x64
 The engine runs in production on Google Cloud Platform:
 ```bash
 # Production environment
-- Instance: c0br4-production-bot (e2-micro)
-- OS: Alpine Linux + .NET 6.0 Runtime
-- Engine: C0BR4_v2.9 (native Linux build)
-- Management: Docker containerized
+- Instance: c0br4-production-bot (e2-small, 2GB RAM)
+- OS: Debian Linux + .NET 6.0 Runtime
+- Engine: C0BR4_v3.2 (native Linux build)
+- Management: Docker containerized (ghcr.io/lichess-bot-devs/lichess-bot)
 - Monitoring: Unified dashboard with V7P3R bot
 ```
 
@@ -226,7 +230,9 @@ src/
 └── Program.cs              # Entry point with MagicBitboards.Initialize()
 
 deployed/                   # Production deployment snapshots
-├── v2.9/                  # Current production version
+├── v3.2/                  # Current production version
+├── v3.1/                  # Previous version (opening book improvements)
+├── v2.9/                  # Stable fallback version
 └── ...
 
 rollback_backup/           # Emergency rollback preservations
@@ -249,10 +255,10 @@ MagicBitboards.Initialize();
 dotnet test
 
 # 2. Performance benchmark
-echo "uci\nposition fen r3k2r/p1ppqpb1/Bn2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R w KQkq - 0 1\ngo depth 4\nquit" | ./C0BR4_v2.9.exe
+echo "uci\nposition fen r3k2r/p1ppqpb1/Bn2pnp1/3PN3/1p2P3/2N2Q2/PPPB1PpP/R3K2R w KQkq - 0 1\ngo depth 4\nquit" | ./C0BR4_v3.2.exe
 
 # 3. Opening validation
-echo "uci\nposition startpos moves e2e4 e7e5\ngo depth 2\nquit" | ./C0BR4_v2.9.exe
+echo "uci\nposition startpos moves e2e4 e7e5\ngo depth 2\nquit" | ./C0BR4_v3.2.exe
 # Expected: Should suggest reasonable moves (Bc4, Nf3, d3, etc.)
 # NEVER: Should not suggest Qh5 (Patzer-Parnham Opening)
 
@@ -352,31 +358,35 @@ Compatible with UCI chess GUIs:
 
 ## Roadmap & Version History
 
-### Current Status: v2.9 (Stable Production)
-- ✅ **Proven Tournament Performance** - Active on Lichess
-- ✅ **Cloud Deployment** - 24/7 operation on GCP
-- ✅ **Opening Book Integration** - 5-8 move coverage
+### Current Status: v3.2 (Stable Production)
+- ✅ **Enhanced Endgame Play** - Aggressive pawn pushing with unstoppable pawn detection
+- ✅ **Proven Tournament Performance** - Active on Lichess with improved conversion
+- ✅ **Cloud Deployment** - 24/7 operation on GCP (e2-small)
+- ✅ **Data-Driven Opening Book** - 188 moves across 6 opening families (v3.1)
 - ✅ **Advanced Search** - Transposition table with move ordering
-- ✅ **Multi-Phase Evaluation** - Game phase specialization
+- ✅ **Multi-Phase Evaluation** - Game phase specialization with pure pawn endgame logic
 
 ### Version History
 | Version | Key Features | Status |
 |---------|-------------|---------|
-| **v2.9** | Production stability, cloud deployment | ✅ **Current** |
+| **v3.2** | Pawn endgame mastery, unstoppable pawn detection | ✅ **Current** |
+| v3.1 | Data-driven opening book (188 moves, 6 families) | ✅ Stable |
+| v2.9 | Production stability, cloud deployment | ✅ Stable |
 | v2.8 | Enhanced UCI output, PV display | ✅ Stable |
 | v2.7 | Bug fixes, move validation | ✅ Stable |
 | v2.6 | Performance optimizations | ✅ Stable |
 | v2.5 | Illegal move elimination | ✅ Stable |
 | ~~v3.0~~ | ❌ **REGRESSION** - Emergency rollback | 🚫 **Avoided** |
 
-### Future Development (v3.1+)
+### Future Development (v3.3+)
 **Following Incremental Development Principles:**
 
 #### Short Term Goals
+- [x] **Opening Book Expansion** - ✅ Completed in v3.1 (188 moves, 6 families)
+- [x] **Pawn Endgame Improvement** - ✅ Completed in v3.2 (unstoppable pawn detection)
 - [ ] **Enhanced Time Management** - Tournament-grade time allocation
 - [ ] **Improved Move Ordering** - History heuristic and killer moves
-- [ ] **Opening Book Expansion** - Deeper coverage with more variations
-- [ ] **Evaluation Tuning** - Fine-tune piece-square tables
+- [ ] **Evaluation Tuning** - Fine-tune piece-square tables for middlegame
 
 #### Medium Term Goals  
 - [ ] **Tactical Pattern Recognition** - Pin, fork, skewer detection
@@ -416,10 +426,10 @@ Compatible with UCI chess GUIs:
 
 ---
 
-**Current Version**: v2.9 (Production Stable)  
-**Deployment**: 24/7 Cloud Operation on GCP  
-**Last Updated**: November 2025  
-**Next Version**: v3.1 (Incremental Improvements)
+**Current Version**: v3.2 (Production Stable)  
+**Deployment**: 24/7 Cloud Operation on GCP (e2-small)  
+**Last Updated**: November 19, 2025  
+**Next Version**: v3.3 (Incremental Improvements)
 
 For development questions, check **CHECKLIST.md** for current priorities.  
 For deployment issues, see **c0br4-lichess-engine/** folder documentation.  
