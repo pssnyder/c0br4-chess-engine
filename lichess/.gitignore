@@ -1,0 +1,202 @@
+# ====================
+# Chess Engine & Docker Files
+# ====================
+
+# lichess config file (contains api token)
+config.yml
+
+# Packaged Docker images and archives
+*.tar.gz
+*.tar
+*.zip
+*.7z
+*.rar
+
+# Docker build context and volumes
+.docker/
+docker-data/
+docker-volumes/
+
+# ====================
+# Engine Executables & Binaries
+# ====================
+
+# Chess engine executables
+*.exe
+*.bin
+engines/**/*.exe
+engines/**/bin/
+engines/**/obj/
+
+# Compiled binaries and libraries
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+
+# .NET build outputs
+bin/
+obj/
+Debug/
+Release/
+*.pdb
+*.user
+*.suo
+*.sln.docstates
+
+# ====================
+# Python & Environment
+# ====================
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+ENV/
+env.bak/
+venv.bak/
+
+# Python distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ====================
+# Logs & Runtime Files
+# ====================
+
+# Log files
+*.log
+logs/
+logs_local/
+lichess_bot_auto_logs/
+game_records_local/
+
+# Runtime and process files
+*.pid
+*.tmp
+*.temp
+*.cache
+*.swp
+*.swo
+*~
+
+# ====================
+# Configuration & Secrets
+# ====================
+
+# Environment files with secrets
+.env
+.env.local
+.env.production
+.env.staging
+config.yml.local
+config-local.yml
+
+# API keys and tokens
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+credentials/
+
+# ====================
+# Cloud & Deployment
+# ====================
+
+# Cloud deployment artifacts
+*.json.bak
+deployment-*.log
+terraform.tfstate*
+.terraform/
+
+# GCP specific
+gcp-key.json
+service-account*.json
+
+# ====================
+# Development & IDE
+# ====================
+
+# IDE files
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Editor backup files
+*~
+*.bak
+*.orig
+*.rej
+
+# ====================
+# Testing & Coverage
+# ====================
+
+# Test outputs
+coverage/
+.coverage
+.pytest_cache/
+.tox/
+.nox/
+.coverage.*
+htmlcov/
+.nyc_output
+
+# ====================
+# Node.js (if applicable)
+# ====================
+
+# Node modules and package files
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn/
+
+# ====================
+# Git & Version Control
+# ====================
+
+# Git hooks and local config
+.git/hooks/local*
+
+# ====================
+# Monitoring & Analytics
+# ====================
+
+# Monitoring data
+monitoring/data/
+*.sqlite
+*.db
+
+# Performance test outputs
+performance-*.json
+benchmark-*.log

@@ -1,0 +1,62 @@
+[Event "rated classical game"]
+[Site "https://lichess.org/MLYc8RRg"]
+[Date "2025.10.15"]
+[Round "?"]
+[White "CourageousCheckmate7"]
+[Black "c0br4_bot"]
+[Result "1-0"]
+[GameId "MLYc8RRg"]
+[UTCDate "2025.10.15"]
+[UTCTime "06:13:35"]
+[WhiteElo "2000"]
+[BlackElo "2000"]
+[WhiteRatingDiff "+245"]
+[BlackRatingDiff "-242"]
+[WhiteTitle "BOT"]
+[BlackTitle "BOT"]
+[Variant "Standard"]
+[TimeControl "1800+0"]
+[ECO "A10"]
+[Opening "English Opening: Anglo-Scandinavian Defense"]
+[Termination "Normal"]
+
+1. c4 { [%clk 0:30:00] } 1... d5 { [%clk 0:30:00] } 2. cxd5 { [%clk 0:30:00] }
+2... Nc6 { [%clk 0:29:59] } 3. dxc6 { [%clk 0:29:26] } 3... bxc6
+{ [%clk 0:29:59] } ( 3... bxc6 4. Nf3 Nf6 5. Nc3 { [%eval 3.40,4] } ) 4. e4
+{ [%clk 0:28:45] } 4... Qd4 { [%clk 0:29:58] } ( 4... Qd4 5. Nc3 Nf6 6. Nf3
+{ [%eval 2.85,4] } ) 5. Nc3 { [%clk 0:27:19] } 5... Qf6 { [%clk 0:29:57] } (
+5... Qf6 6. Be2 Qg5 { [%eval 3.45,4] } ) 6. d4 { [%clk 0:26:15] } 6... Be6
+{ [%clk 0:29:56] } ( 6... Be6 7. Ba6 Qg6 8. Qf3 { [%eval 2.78,4] } ) 7. e5
+{ [%clk 0:23:35] } 7... Qf5 { [%clk 0:29:55] } ( 7... Qf5 8. Qa4 Bd7 9. Nf3
+{ [%eval 2.78,4] } ) 8. Bd3 { [%clk 0:22:11] } 8... Qg4 { [%clk 0:29:54] } (
+8... Qg4 9. Qxg4 Bxg4 10. Nge2 { [%eval 2.96,4] } ) 9. Be2 { [%clk 0:21:46] }
+9... Qxg2 { [%clk 0:29:53] } ( 9... Qxg2 10. Bf3 Qg6 11. Bxc6+
+{ [%eval 2.73,4] } ) 10. Bf3 { [%clk 0:21:24] } 10... Bg4 { [%clk 0:29:53] } (
+10... Bg4 11. Bxg2 Bxd1 12. Nxd1 { [%eval 3.63,4] } ) 11. Bxg2
+{ [%clk 0:20:54] } 11... Bxd1 { [%clk 0:29:53] } ( 11... Bxd1 12. Bxc6+ Kd8 13.
+Bxa8 { [%eval 8.08,4] } ) 12. Bxc6+ { [%clk 0:20:28] } 12... Kd8
+{ [%clk 0:29:52] } ( 12... Kd8 13. Bxa8 Bg4 14. Nf3 { [%eval 8.37,4] } ) 13.
+Bxa8 { [%clk 0:20:01] } 13... Bc2 { [%clk 0:29:51] } ( 13... Bc2 14. Nb5 Kc8
+15. Nxa7+ { [%eval 8.32,4] } ) 14. Bd2 { [%clk 0:19:35] } 14... Kc8
+{ [%clk 0:29:51] } ( 14... Kc8 15. Nf3 Bd3 16. Bc6 { [%eval 8.11,4] } ) 15. Rc1
+{ [%clk 0:19:08] } 15... Bd3 { [%clk 0:29:50] } ( 15... Bd3 16. Nd5 c5 17.
+Rxc5+ { [%eval 9.13,4] } ) 16. Be4 { [%clk 0:18:42] } 16... Bxe4
+{ [%clk 0:29:49] } ( 16... Bxe4 17. Nxe4 Nh6 18. Nf3 { [%eval 8.04,4] } ) 17.
+Nxe4 { [%clk 0:17:59] } 17... f5 { [%clk 0:29:49] } ( 17... f5 18. Ng3 e6 19.
+Nf3 { [%eval 8.61,4] } ) 18. Ng5 { [%clk 0:17:37] } 18... Nf6
+{ [%clk 0:29:48] } ( 18... Nf6 19. exf6 exf6 20. Ne6 { [%eval 9.74,4] } ) 19.
+exf6 { [%clk 0:17:05] } 19... exf6 { [%clk 0:29:48] } ( 19... exf6 20. Ne6 Bd6
+21. Nxg7 { [%eval 10.84,4] } ) 20. Nf7 { [%clk 0:16:36] } 20... Rg8
+{ [%clk 0:29:47] } ( 20... Rg8 21. Ba5 c5 22. dxc5 { [%eval 10.99,4] } ) 21.
+Ba5 { [%clk 0:16:09] } 21... c5 { [%clk 0:29:47] } ( 21... c5 22. dxc5 Be7 23.
+Nf3 { [%eval 11.40,4] } ) 22. dxc5 { [%clk 0:15:43] } 22... Be7
+{ [%clk 0:29:46] } ( 22... Be7 23. Nf3 Rf8 24. Nd6+ { [%eval 11.41,4] } ) 23.
+Ne2 { [%clk 0:15:14] } 23... Rf8 { [%clk 0:29:46] } ( 23... Rf8 24. Nd6+ Bxd6
+25. cxd6+ { [%eval 11.39,4] } ) 24. Nd6+ { [%clk 0:14:49] } 24... Bxd6
+{ [%clk 0:29:45] } ( 24... Bxd6 25. cxd6+ Kb8 26. O-O { [%eval 12.23,4] } ) 25.
+cxd6+ { [%clk 0:14:27] } 25... Kd7 { [%clk 0:29:45] } ( 25... Kd7 26. Rc7+ Kxd6
+27. Rxg7 { [%eval 12.49,4] } ) 26. Rg1 { [%clk 0:13:54] } 26... Rg8
+{ [%clk 0:29:44] } ( 26... Rg8 27. Rc7+ Kxd6 28. Rxa7 { [%eval 12.32,4] } ) 27.
+Rc7+ { [%clk 0:13:23] } 27... Kxd6 { [%clk 0:29:44] } ( 27... Kxd6 28. Rxa7 Rb8
+29. Nd4 { [%eval 12.45,4] } ) 28. Rg3 { [%clk 0:12:53] } 1-0
+

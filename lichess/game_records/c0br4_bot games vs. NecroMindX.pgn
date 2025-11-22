@@ -1,0 +1,55 @@
+[Event "34th BOTS and Humans League Team Battle"]
+[Site "https://lichess.org/nBObfihL"]
+[Date "2025.10.14"]
+[Round "?"]
+[White "NecroMindX"]
+[Black "c0br4_bot"]
+[Result "1-0"]
+[GameId "nBObfihL"]
+[UTCDate "2025.10.14"]
+[UTCTime "17:49:39"]
+[WhiteElo "3077"]
+[BlackElo "2000"]
+[WhiteTitle "BOT"]
+[BlackTitle "BOT"]
+[Variant "Standard"]
+[TimeControl "60+1"]
+[ECO "C42"]
+[Opening "Petrov's Defense"]
+[Termination "Normal"]
+
+1. e4 { [%clk 0:01:00] } 1... e5 { [%clk 0:01:00] } 2. Nf3 { [%clk 0:01:01] }
+2... Nf6 { [%clk 0:01:00] } 3. Nxe5 { [%clk 0:01:02] } 3... Qe7
+{ [%clk 0:01:00] } ( 3... Qe7 4. Nxf7 Qxf7 5. Nc3 { [%eval 0.35,4] } ) 4. d4
+{ [%clk 0:01:03] } 4... Nc6 { [%clk 0:00:59] } ( 4... Nc6 5. Nxc6 Qxe4+ 6. Be2
+{ [%eval -0.52,4] } ) 5. Nc3 { [%clk 0:01:04] } 5... Nxe5 { [%clk 0:00:59] } (
+5... Nxe5 6. dxe5 Qxe5 7. Bd3 { [%eval -0.22,4] } ) 6. dxe5 { [%clk 0:01:05] }
+6... Qxe5 { [%clk 0:00:59] } ( 6... Qxe5 7. Bd3 Bb4 8. Bd2 { [%eval -0.60,4] }
+) 7. f4 { [%clk 0:01:05] } 7... Qa5 { [%clk 0:00:59] } ( 7... Qa5 8. Bd3 Bb4 9.
+Bd2 { [%eval -1.00,4] } ) 8. Qd3 { [%clk 0:01:06] } 8... Bb4 { [%clk 0:00:58] }
+( 8... Bb4 9. Bd2 O-O 10. Be2 { [%eval -1.20,4] } ) 9. Bd2 { [%clk 0:01:07] }
+9... Qh5 { [%clk 0:00:58] } ( 9... Qh5 10. Be2 Qh4+ 11. g3 { [%eval -1.23,4] }
+) 10. e5 { [%clk 0:01:08] } 10... Bxc3 { [%clk 0:00:58] } ( 10... Bxc3 11. Bxc3
+Qh4+ 12. g3 { [%eval -1.51,4] } ) 11. Bxc3 { [%clk 0:01:08] } 11... Ng4
+{ [%clk 0:00:58] } ( 11... Ng4 12. Qg3 Qf5 13. O-O-O { [%eval -0.58,4] } ) 12.
+Qf3 { [%clk 0:01:09] } 12... Qh4+ { [%clk 0:00:58] } ( 12... Qh4+ 13. Qg3 Qxg3+
+14. hxg3 { [%eval -1.32,4] } ) 13. g3 { [%clk 0:01:09] } 13... Nxh2
+{ [%clk 0:00:58] } ( 13... Nxh2 14. Qg2 Qg4 15. Qxh2 { [%eval -0.36,4] } ) 14.
+Qd3 { [%clk 0:01:10] } 14... Qh5 { [%clk 0:00:58] } ( 14... Qh5 15. Be2 Qh6 16.
+O-O-O { [%eval -1.28,4] } ) 15. Be2 { [%clk 0:01:08] } 15... Qh6
+{ [%clk 0:00:59] } ( 15... Qh6 16. Ba5 b6 17. Bb4 { [%eval -1.23,4] } ) 16.
+O-O-O { [%clk 0:01:05] } 16... Rb8 { [%clk 0:00:59] } ( 16... Rb8 17. Bg4 Nxg4
+18. Rxh6 { [%eval -0.86,4] } ) 17. Qd4 { [%clk 0:01:03] } 17... Ra8
+{ [%clk 0:00:59] } ( 17... Ra8 18. Bb4 a5 19. Bc5 { [%eval -0.58,4] } ) 18. e6
+{ [%clk 0:01:01] } 18... fxe6 { [%clk 0:00:59] } ( 18... fxe6 19. Qf2 Rb8 20.
+Rxh2 { [%eval -0.01,4] } ) 19. Rxh2 { [%clk 0:00:58] } 19... Qxh2
+{ [%clk 0:01:00] } ( 19... Qxh2 20. Qxg7 Rf8 21. Bb5 { [%eval -2.67,4] } ) 20.
+Qxg7 { [%clk 0:00:56] } 20... Rf8 { [%clk 0:01:01] } ( 20... Rf8 21. Bb5 Rf7
+22. Qg8+ { [%eval -2.67,4] } ) 21. Bb4 { [%clk 0:00:55] } 21... c5
+{ [%clk 0:01:01] } ( 21... c5 22. Bxc5 Rf7 23. Qg8+ { [%eval -1.12,4] } ) 22.
+Bxc5 { [%clk 0:00:52] } 22... d6 { [%clk 0:01:02] } ( 22... d6 23. Bb5+ Bd7 24.
+Qxd7# { [%eval 1.97,4] } ) 23. Bb5+ { [%clk 0:00:53] } 23... Kd8
+{ [%clk 0:01:02] } ( 23... Kd8 24. Qxf8+ Kc7 25. Qxd6# { [%eval 7.92,4] } ) 24.
+Qxf8+ { [%clk 0:00:54] } 24... Kc7 { [%clk 0:01:02] } ( 24... Kc7 25. Qxd6#
+{ [%eval 299.97,3] } ) 25. Qxd6# { [%clk 0:00:54] } 1-0
+

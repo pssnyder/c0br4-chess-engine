@@ -1,0 +1,33 @@
+displayName: "C0BR4 Bot High Resource Usage"
+combiner: OR
+conditions:
+  - displayName: "High CPU Usage"
+    conditionThreshold:
+      filter: 'resource.type="gce_instance" AND resource.label.instance_name="c0br4-lichess-bot"'
+      comparison: COMPARISON_GREATER_THAN
+      thresholdValue: 80
+      duration: 300s
+      aggregations:
+        - alignmentPeriod: 60s
+          perSeriesAligner: ALIGN_MEAN
+          crossSeriesReducer: REDUCE_MEAN
+          groupByFields:
+            - resource.instance_name
+  - displayName: "High Memory Usage"  
+    conditionThreshold:
+      filter: 'resource.type="gce_instance" AND resource.label.instance_name="c0br4-lichess-bot"'
+      comparison: COMPARISON_GREATER_THAN
+      thresholdValue: 85
+      duration: 300s
+      aggregations:
+        - alignmentPeriod: 60s
+          perSeriesAligner: ALIGN_MEAN
+          crossSeriesReducer: REDUCE_MEAN
+          groupByFields:
+            - resource.instance_name
+notificationChannels:
+  # Add your notification channels here
+  # - projects/[PROJECT_ID]/notificationChannels/[CHANNEL_ID]
+alertStrategy:
+  autoClose: 86400s  # Auto-close after 24 hours
+enabled: true
