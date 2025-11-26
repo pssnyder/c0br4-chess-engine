@@ -56,7 +56,7 @@ namespace C0BR4ChessEngine.Search
                 return Math.Max(100, remainingTime / 15 + increment / 2); // ~7% of time + half increment
             }
 
-            // Calculate base time allocation
+            // Calculate base time allocation - MORE CONSERVATIVE for deeper searches
             int baseTime;
             
             if (timeControl.MovesToGo > 0)
@@ -69,44 +69,68 @@ namespace C0BR4ChessEngine.Search
             else
             {
                 // Increment-based time control
-                // Use a fraction of remaining time plus most of the increment
-                int estimatedMovesLeft = EstimateMovesRemaining(gamePhase);
-                baseTime = remainingTime / estimatedMovesLeft + (increment * 4) / 5;
+                // Use a MORE CONSERVATIVE fraction of remaining time plus most of the increment
+                // OLD: estimatedMovesLeft based on game phase (20-40 moves)
+                // NEW: Use more conservative estimates to save time for deeper search
+                int estimatedMovesLeft = EstimateMovesRemaining(gamePhase, remainingTime);
+                
+                // More conservative time usage - save time for deeper searches
+                // In longer games (30+ min), aim for 50-60 moves total
+                baseTime = remainingTime / estimatedMovesLeft + (increment * 3) / 4;
             }
 
-            // Apply game phase adjustments
+            // Apply game phase adjustments - REDUCED multipliers for more consistent time usage
             double phaseMultiplier = CalculatePhaseMultiplier(gamePhase);
             baseTime = (int)(baseTime * phaseMultiplier);
 
             // Apply safety margins
             baseTime = ApplySafetyMargins(baseTime, remainingTime);
 
-            // Ensure minimum and maximum bounds
-            return Math.Max(100, Math.Min(baseTime, remainingTime / 3));
+            // Ensure minimum and maximum bounds - limit to 1/4 instead of 1/3
+            return Math.Max(100, Math.Min(baseTime, remainingTime / 4));
         }
 
         /// <summary>
-        /// Estimate remaining moves based on game phase
+        /// Estimate remaining moves based on game phase and remaining time
+        /// More conservative estimates for longer time controls
         /// </summary>
-        private static int EstimateMovesRemaining(double gamePhase)
+        private static int EstimateMovesRemaining(double gamePhase, int remainingTime)
         {
-            // Opening: ~40 moves, Middlegame: ~30 moves, Endgame: ~20 moves
-            return (int)(20 + gamePhase * 20);
+            // Base estimates by game phase
+            // Opening: ~50 moves, Middlegame: ~40 moves, Endgame: ~25 moves
+            int phaseEstimate = (int)(25 + gamePhase * 25);
+            
+            // Adjust based on remaining time - longer games = more conservative
+            if (remainingTime > 1800000) // 30+ minutes
+            {
+                phaseEstimate = Math.Max(phaseEstimate, 50); // Assume at least 50 moves left
+            }
+            else if (remainingTime > 600000) // 10+ minutes
+            {
+                phaseEstimate = Math.Max(phaseEstimate, 40); // Assume at least 40 moves left
+            }
+            else if (remainingTime > 300000) // 5+ minutes
+            {
+                phaseEstimate = Math.Max(phaseEstimate, 30); // Assume at least 30 moves left
+            }
+            
+            return phaseEstimate;
         }
 
         /// <summary>
         /// Calculate time multiplier based on game phase
+        /// REDUCED multipliers for more consistent time usage across game phases
         /// </summary>
         private static double CalculatePhaseMultiplier(double gamePhase)
         {
-            // Spend more time in middlegame (complexity peak)
-            // Opening: 0.9x, Middlegame: 1.2x, Endgame: 0.8x
+            // Spend slightly more time in middlegame but less variation overall
+            // Opening: 0.95x, Middlegame: 1.1x, Endgame: 0.9x (reduced from 0.9/1.2/0.8)
             if (gamePhase > 0.7) // Opening
-                return 0.9;
+                return 0.95;
             else if (gamePhase > 0.3) // Middlegame
-                return 1.2;
+                return 1.1;
             else // Endgame
-                return 0.8;
+                return 0.9;
         }
 
         /// <summary>
@@ -122,6 +146,104 @@ namespace C0BR4ChessEngine.Search
             baseTime = Math.Max(100, baseTime - 50);
 
             return baseTime;
+        }
+
+        /// <summary>
+        /// Calculate optimal search depth based on time control and game phase
+        /// Adaptive depth targeting: depth 6 minimum, depth 10+ for longer games
+        /// </summary>
+        /// <param name="timeControl">Time control parameters</param>
+        /// <param name="isWhiteToMove">Whether white is to move</param>
+        /// <param name="gamePhase">Estimated game phase</param>
+        /// <returns>Recommended search depth (1-12)</returns>
+        public static int CalculateSearchDepth(TimeControl timeControl, bool isWhiteToMove, double gamePhase = 0.5)
+        {
+            // Fixed depth has highest priority
+            if (timeControl.Depth > 0)
+            {
+                return Math.Min(timeControl.Depth, 12); // Cap at depth 12 for safety
+            }
+
+            // Infinite search - aim for maximum depth
+            if (timeControl.Infinite)
+            {
+                return 12;
+            }
+
+            // Get remaining time for current player
+            int remainingTime = isWhiteToMove ? timeControl.WhiteTime : timeControl.BlackTime;
+            int increment = isWhiteToMove ? timeControl.WhiteIncrement : timeControl.BlackIncrement;
+            
+            // Fixed move time - calculate depth based on time available
+            if (timeControl.MoveTime > 0)
+            {
+                return DepthFromMoveTime(timeControl.MoveTime);
+            }
+
+            // Calculate depth based on total time available
+            // Consider both remaining time and increment
+            int effectiveTime = remainingTime + (increment * 20); // Rough estimate including future increments
+
+            // Depth calculation based on time control
+            if (effectiveTime >= 1800000) // 30+ minutes total
+            {
+                return 10; // Deep search for long games
+            }
+            else if (effectiveTime >= 900000) // 15+ minutes
+            {
+                return 9;
+            }
+            else if (effectiveTime >= 600000) // 10+ minutes
+            {
+                return 8;
+            }
+            else if (effectiveTime >= 300000) // 5+ minutes
+            {
+                return 7;
+            }
+            else if (effectiveTime >= 180000) // 3+ minutes
+            {
+                return 6; // Target minimum depth
+            }
+            else if (effectiveTime >= 60000) // 1+ minute
+            {
+                return 5;
+            }
+            else if (effectiveTime >= 30000) // 30+ seconds
+            {
+                return 4;
+            }
+            else if (effectiveTime >= 10000) // 10+ seconds
+            {
+                return 3;
+            }
+            else // Bullet chess - emergency mode
+            {
+                return 2;
+            }
+        }
+
+        /// <summary>
+        /// Calculate appropriate depth for a fixed move time
+        /// </summary>
+        private static int DepthFromMoveTime(int moveTime)
+        {
+            if (moveTime >= 30000) // 30+ seconds per move
+                return 10;
+            else if (moveTime >= 15000) // 15+ seconds
+                return 9;
+            else if (moveTime >= 10000) // 10+ seconds
+                return 8;
+            else if (moveTime >= 5000) // 5+ seconds
+                return 7;
+            else if (moveTime >= 3000) // 3+ seconds
+                return 6;
+            else if (moveTime >= 1000) // 1+ second
+                return 5;
+            else if (moveTime >= 500) // 500+ ms
+                return 4;
+            else
+                return 3;
         }
 
         /// <summary>

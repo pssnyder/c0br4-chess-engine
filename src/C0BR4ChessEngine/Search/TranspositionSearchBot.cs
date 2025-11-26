@@ -8,6 +8,7 @@ namespace C0BR4ChessEngine.Search
     /// <summary>
     /// Alpha-beta search with move ordering, quiescence search, and transposition table
     /// Transposition table caches previously computed positions to avoid re-search
+    /// v3.3: Now supports adaptive depth based on time control
     /// </summary>
     public class TranspositionSearchBot : IChessBot
     {
@@ -15,7 +16,7 @@ namespace C0BR4ChessEngine.Search
         private readonly TranspositionTable transpositionTable = new(100000); // 100K entries
         private long nodesSearched = 0;
         private long quiescenceNodes = 0;
-        private int searchDepth = 4; // Default search depth
+        private int targetDepth = 6; // Target search depth (will be set dynamically based on time control)
         private List<Move> currentPV = new(); // Principal variation line
 
         public Move Think(Board board, TimeSpan timeLimit)
@@ -35,12 +36,26 @@ namespace C0BR4ChessEngine.Search
             
             Move bestMove = legalMoves[0];
             int bestScore = -50000;
+            int lastCompletedDepth = 0;
             
-            // Iterative deepening search
-            for (int depth = 1; depth <= searchDepth; depth++)
+            // Iterative deepening search up to target depth
+            // Continue while we have time and haven't reached target depth
+            for (int depth = 1; depth <= targetDepth; depth++)
             {
+                // Check time before starting new depth iteration
                 if (stopwatch.Elapsed >= timeLimit)
+                {
+                    Console.WriteLine($"info string Time limit reached at depth {depth}, using depth {lastCompletedDepth} result");
                     break;
+                }
+                
+                // Reserve some time for final iterations
+                double timeUsedRatio = stopwatch.Elapsed.TotalMilliseconds / timeLimit.TotalMilliseconds;
+                if (timeUsedRatio > 0.75 && depth > lastCompletedDepth + 1)
+                {
+                    Console.WriteLine($"info string 75% time used, stopping at depth {lastCompletedDepth}");
+                    break;
+                }
                     
                 var (move, score, pv) = SearchWithPV(board, depth);
                 
@@ -49,6 +64,7 @@ namespace C0BR4ChessEngine.Search
                     bestMove = move;
                     bestScore = score;
                     currentPV = pv;
+                    lastCompletedDepth = depth;
                     
                     // Output UCI info for this depth
                     var pvString = string.Join(" ", currentPV.Select(m => m.ToString()));
@@ -60,7 +76,10 @@ namespace C0BR4ChessEngine.Search
                 
                 // Break if we found a mate
                 if (Math.Abs(bestScore) > 20000)
+                {
+                    Console.WriteLine($"info string Mate found at depth {depth}, stopping search");
                     break;
+                }
             }
             
             stopwatch.Stop();
@@ -76,7 +95,7 @@ namespace C0BR4ChessEngine.Search
             var (ttHits, ttStores, ttEntries) = transpositionTable.GetStatistics();
             
             // Final search summary
-            Console.WriteLine($"info string Search completed: depth {searchDepth} nodes {nodesSearched} qnodes {quiescenceNodes} tthits {ttHits}");
+            Console.WriteLine($"info string Search completed: target depth {targetDepth}, reached depth {lastCompletedDepth}, nodes {nodesSearched}, qnodes {quiescenceNodes}, tthits {ttHits}");
             
             return bestMove;
         }
@@ -176,7 +195,7 @@ namespace C0BR4ChessEngine.Search
                 int terminalScore;
                 if (board.IsInCheck())
                 {
-                    terminalScore = -30000 + (searchDepth - depth);
+                    terminalScore = -30000 + (targetDepth - depth);
                 }
                 else
                 {
@@ -267,7 +286,7 @@ namespace C0BR4ChessEngine.Search
                 if (board.IsInCheck())
                 {
                     // Checkmate - return very negative score, adjusted for depth to prefer quicker mates
-                    terminalScore = -30000 + (searchDepth - depth);
+                    terminalScore = -30000 + (targetDepth - depth);
                 }
                 else
                 {
@@ -397,11 +416,12 @@ namespace C0BR4ChessEngine.Search
         }
 
         /// <summary>
-        /// Set the search depth for the engine
+        /// Set the target search depth for the engine
+        /// This is now the TARGET depth we aim to reach given time constraints
         /// </summary>
         public void SetDepth(int depth)
         {
-            searchDepth = Math.Max(1, Math.Min(depth, 10));
+            targetDepth = Math.Max(1, Math.Min(depth, 12)); // Allow up to depth 12
         }
 
         /// <summary>

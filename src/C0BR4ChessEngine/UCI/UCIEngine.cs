@@ -18,7 +18,7 @@ namespace C0BR4ChessEngine.UCI
         private Board board = new();
         private IChessBot bot = new TranspositionSearchBot(); // v0.6: Alpha-beta with move ordering, quiescence, and transposition table
         private bool isRunning = true;
-        private const string EngineVersion = "v3.2";
+        private const string EngineVersion = "v3.3";
 
         public UCIEngine()
         {
@@ -168,8 +168,17 @@ namespace C0BR4ChessEngine.UCI
             // Parse time control parameters using TimeManager
             var timeControl = TimeManager.ParseTimeControl(parts);
             
-            // Calculate game phase for time allocation
+            // Calculate game phase for time allocation and depth
             double gamePhase = GamePhase.CalculatePhase(board);
+            
+            // Calculate optimal search depth based on time control (NEW in v3.3)
+            int targetDepth = TimeManager.CalculateSearchDepth(timeControl, board.IsWhiteToMove, gamePhase);
+            
+            // Set the target depth for the search bot
+            if (bot is TranspositionSearchBot searchBot)
+            {
+                searchBot.SetDepth(targetDepth);
+            }
             
             // Determine time allocation
             int timeAllocation;
@@ -196,7 +205,7 @@ namespace C0BR4ChessEngine.UCI
             
             // Output time management info for debugging
             Console.WriteLine($"info string Game phase: {GamePhase.GetPhaseName(board)} ({gamePhase:F2})");
-            Console.WriteLine($"info string Time allocation: {timeAllocation}ms");
+            Console.WriteLine($"info string Target depth: {targetDepth}, Time allocation: {timeAllocation}ms");
             if (timeControl.WhiteTime > 0 || timeControl.BlackTime > 0)
             {
                 int remainingTime = board.IsWhiteToMove ? timeControl.WhiteTime : timeControl.BlackTime;

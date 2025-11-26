@@ -64,6 +64,12 @@ Low Priority Backlog
   - **Piece Centralization**: Attack patterns toward enemy king in very late endgame
   - **Pawn Promotion Urgency**: Advanced pawn pushing in critical positions
 - ✅ **Enhanced Perft Testing**: Complete perft implementation with make/unmake moves, perft divide for debugging, comprehensive test suite with known positions, and performance benchmarking. Added UCI commands: `perft <depth>`, `perftdivide <depth>`, `perftbench`. ✅ **COMPLETE v3.0**
+- ✅ **Adaptive Time Management & Search Depth**: ✅ **COMPLETE v3.3** - Implemented dynamic depth calculation and conservative time management:
+  - **Adaptive Depth**: Calculates optimal search depth (2-12) based on time control
+  - **Target Depths**: Bullet=4, Blitz(3min)=6, Rapid(10min)=8, Classical(30min)=10
+  - **Conservative Time Allocation**: Increased move estimates (25-50) and reduced phase multipliers for deeper searches
+  - **Smart Time Management**: Stops at 75% time usage before attempting new depth iteration
+  - **Time Control Awareness**: Longer games preserve more time for consistent deep analysis
 - [ ] Robust UCI options support — implement `setoption` and expose parameters like search depth, time, nodes, nodes/sec, value, mainline.
 - [ ] Enhanced opening book: expand to include more of the most popular "first moves" for white, and "best defenses" for black.
 

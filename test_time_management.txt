@@ -1,0 +1,31 @@
+# C0BR4 v3.3 Time Management Test Script
+# This script tests the adaptive depth calculation with various time controls
+# Feed this to the engine via stdin to test
+
+# Test 1: Bullet (30 seconds total) - should target depth 3-4
+uci
+isready
+position startpos
+go wtime 30000 btime 30000 winc 0 binc 0
+
+# Test 2: Blitz (3 minutes total) - should target depth 6
+position startpos
+go wtime 180000 btime 180000 winc 2000 binc 2000
+
+# Test 3: Rapid (10 minutes total) - should target depth 8
+position startpos
+go wtime 600000 btime 600000 winc 0 binc 0
+
+# Test 4: Classical (30 minutes total) - should target depth 10
+position startpos
+go wtime 1800000 btime 1800000 winc 0 binc 0
+
+# Test 5: Fixed move time (10 seconds per move) - should target depth 8
+position startpos
+go movetime 10000
+
+# Test 6: Fixed depth - should respect depth
+position startpos
+go depth 7
+
+quit

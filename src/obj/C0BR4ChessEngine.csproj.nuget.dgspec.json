@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj": {}
+    "S:\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj": {}
   },
   "projects": {
-    "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj": {
-      "version": "3.2.0",
+    "S:\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj": {
+      "version": "3.3.0",
       "restore": {
-        "projectUniqueName": "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj",
-        "projectName": "C0BR4_v3.2",
-        "projectPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj",
+        "projectUniqueName": "S:\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj",
+        "projectName": "C0BR4_v3.3",
+        "projectPath": "S:\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\C0BR4ChessEngine.csproj",
         "packagesPath": "C:\\Users\\patss\\.nuget\\packages\\",
-        "outputPath": "S:\\Maker Stuff\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\obj\\",
+        "outputPath": "S:\\Programming\\Chess Engines\\C0BR4 Chess Engine\\cobra-chess-engine\\src\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\patss\\AppData\\Roaming\\NuGet\\NuGet.Config"
