@@ -44,16 +44,16 @@ namespace C0BR4ChessEngine.Search
             int remainingTime = isWhiteToMove ? timeControl.WhiteTime : timeControl.BlackTime;
             int increment = isWhiteToMove ? timeControl.WhiteIncrement : timeControl.BlackIncrement;
 
-            // Emergency time - if we have less than 2 seconds, play very quickly
-            if (remainingTime < 2000)
+            // Emergency time - if we have less than 3 seconds, play VERY quickly
+            if (remainingTime < 3000)
             {
-                return Math.Max(50, remainingTime / 20); // Use 5% of remaining time, minimum 50ms
+                return Math.Max(30, remainingTime / 30); // Use 3% of remaining time, minimum 30ms
             }
 
-            // Low time - if we have less than 10 seconds, be conservative
-            if (remainingTime < 10000)
+            // Low time - if we have less than 15 seconds, be MORE conservative
+            if (remainingTime < 15000)
             {
-                return Math.Max(100, remainingTime / 15 + increment / 2); // ~7% of time + half increment
+                return Math.Max(80, remainingTime / 20 + increment / 3); // ~5% of time + 1/3 increment
             }
 
             // Calculate base time allocation - MORE CONSERVATIVE for deeper searches
@@ -86,8 +86,8 @@ namespace C0BR4ChessEngine.Search
             // Apply safety margins
             baseTime = ApplySafetyMargins(baseTime, remainingTime);
 
-            // Ensure minimum and maximum bounds - limit to 1/4 instead of 1/3
-            return Math.Max(100, Math.Min(baseTime, remainingTime / 4));
+            // Ensure minimum and maximum bounds - limit to 1/5 of remaining time for safety
+            return Math.Max(50, Math.Min(baseTime, remainingTime / 5));
         }
 
         /// <summary>
