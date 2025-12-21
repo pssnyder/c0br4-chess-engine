@@ -161,13 +161,13 @@ namespace C0BR4ChessEngine.Search
             // Fixed depth has highest priority
             if (timeControl.Depth > 0)
             {
-                return Math.Min(timeControl.Depth, 12); // Cap at depth 12 for safety
+                return Math.Min(timeControl.Depth, 16); // Cap at depth 16 for classical games
             }
 
             // Infinite search - aim for maximum depth
             if (timeControl.Infinite)
             {
-                return 12;
+                return 16;
             }
 
             // Get remaining time for current player
@@ -184,10 +184,18 @@ namespace C0BR4ChessEngine.Search
             // Consider both remaining time and increment
             int effectiveTime = remainingTime + (increment * 20); // Rough estimate including future increments
 
-            // Depth calculation based on time control
-            if (effectiveTime >= 1800000) // 30+ minutes total
+            // Depth calculation based on time control - INCREASED for classical games
+            if (effectiveTime >= 3600000) // 60+ minutes total
             {
-                return 10; // Deep search for long games
+                return 16; // Maximum depth for very long classical games
+            }
+            else if (effectiveTime >= 2700000) // 45+ minutes
+            {
+                return 14; // Deep search for classical games
+            }
+            else if (effectiveTime >= 1800000) // 30+ minutes total
+            {
+                return 12; // Deep search for classical games
             }
             else if (effectiveTime >= 900000) // 15+ minutes
             {
@@ -228,10 +236,14 @@ namespace C0BR4ChessEngine.Search
         /// </summary>
         private static int DepthFromMoveTime(int moveTime)
         {
-            if (moveTime >= 30000) // 30+ seconds per move
-                return 10;
+            if (moveTime >= 60000) // 60+ seconds per move (classical)
+                return 16;
+            else if (moveTime >= 45000) // 45+ seconds
+                return 14;
+            else if (moveTime >= 30000) // 30+ seconds per move
+                return 12;
             else if (moveTime >= 15000) // 15+ seconds
-                return 9;
+                return 10;
             else if (moveTime >= 10000) // 10+ seconds
                 return 8;
             else if (moveTime >= 5000) // 5+ seconds

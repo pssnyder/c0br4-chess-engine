@@ -421,7 +421,7 @@ namespace C0BR4ChessEngine.Search
         /// </summary>
         public void SetDepth(int depth)
         {
-            targetDepth = Math.Max(1, Math.Min(depth, 12)); // Allow up to depth 12
+            targetDepth = Math.Max(1, Math.Min(depth, 16)); // Allow up to depth 16 for classical games
         }
 
         /// <summary>
