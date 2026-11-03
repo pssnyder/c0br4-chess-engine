@@ -41,3 +41,30 @@ Temp/
 # Ignore system files
 .DS_Store
 Thumbs.db
+
+# Private configuration and local credentials
+*.env
+!*.env.example
+lichess/config.yml
+lichess/config.local.yml
+lichess/config.generated.yml
+lichess/config.*.local.yml
+lichess/config.*.generated.yml
+*.key
+*.pem
+
+# Generated .NET outputs and local historical engines
+**/bin/
+**/obj/
+deployed/
+rollback_backup/
+lichess/engines/
+lichess/game_records/
+*.pgn
+
+# Packages stay local; publish source or deliberate release assets instead
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.7z
