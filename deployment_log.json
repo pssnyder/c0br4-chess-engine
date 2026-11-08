@@ -1,0 +1,29 @@
+{
+  "deployment_history": [
+    {
+      "version": "4.0.0-dev",
+      "date": "2026-11-06",
+      "status": "development",
+      "deployed": false,
+      "reference": {
+        "version": "V7P3R v18.3",
+        "commit": "98706258b8bd093b144f11d286df8b9d31d9df7d",
+        "path": "lichess/engines/V7P3R_v18.3_20251229/src"
+      },
+      "testing": {
+        "release_build_passed": true,
+        "evaluation_parity_cases": 7832,
+        "evaluation_parity_passed": true,
+        "uci_readiness_passed": true,
+        "search_smoke_passed": true,
+        "full_regression_passed": false,
+        "search_parity_tested": false,
+        "performance_matches_played": 0,
+        "perft_smoke": "2026-11-07: startpos depth 4 = 197281; Kiwipete depth 3 = 97862; passed",
+        "interrupted_search_board_restoration_passed": true,
+        "perft_deadline_regression_passed": true
+      },
+      "notes": "Local candidate only. No production changes. Previous deployment history has not been reconstructed."
+    }
+  ]
+}

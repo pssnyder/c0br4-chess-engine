@@ -70,23 +70,23 @@ namespace C0BR4ChessEngine.Testing
         /// </summary>
         public static long Perft(Board board, int depth)
         {
+            if (depth < 0) throw new ArgumentOutOfRangeException(nameof(depth));
             if (depth == 0) return 1;
             
-            var moves = board.GetPseudoLegalMoves();
+            var moves = board.GetLegalMoves();
+            if (depth == 1) return moves.Length;
             long nodes = 0;
             
             foreach (var move in moves)
             {
-                // TODO: Implement make/unmake move for accurate perft
-                // For now, just count leaf nodes
-                if (depth == 1)
+                board.MakeMove(move);
+                try
                 {
-                    nodes++;
+                    nodes += Perft(board, depth - 1);
                 }
-                else
+                finally
                 {
-                    // Can't go deeper without make/unmake - placeholder
-                    nodes++;
+                    board.UnmakeMove();
                 }
             }
             
@@ -102,19 +102,22 @@ namespace C0BR4ChessEngine.Testing
             
             var board = new Board(); // Starting position
             
-            for (int depth = 1; depth <= 3; depth++)
+            long[] expected = { 1, 20, 400, 8902 };
+            for (int depth = 0; depth <= 3; depth++)
             {
                 var stopwatch = Stopwatch.StartNew();
                 long nodes = Perft(board, depth);
                 stopwatch.Stop();
                 
                 Console.WriteLine($"Depth {depth}: {nodes} nodes in {stopwatch.ElapsedMilliseconds}ms");
+                if (nodes != expected[depth])
+                    throw new InvalidOperationException($"Perft depth {depth}: expected {expected[depth]}, received {nodes}");
             }
             
             // Expected results for starting position:
             // Depth 1: 20 nodes
             // Depth 2: 400 nodes  
-            // Depth 3: 8902 nodes (when make/unmake is implemented)
+            // Depth 3: 8902 nodes
             Console.WriteLine("\nExpected results for starting position:");
             Console.WriteLine("Depth 1: 20 nodes");
             Console.WriteLine("Depth 2: 400 nodes");

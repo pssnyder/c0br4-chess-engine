@@ -1,4 +1,13 @@
-# C0BR4 Chess Engine v3.2
+# C0BR4 Chess Engine
+
+## v4.0 development candidate
+
+The default engine now uses the archived V7P3R v18.3 fast evaluation heuristics.
+Search alignment and strength testing are still pending: this is **not a
+production release**. See [v4 alignment](docs/V4_ALIGNMENT.md) for the pinned
+reference, parity test command, intentional differences, and release blockers.
+
+The v3.2 documentation below is historical and does not describe v4 validation.
 
 A modern **production-ready** chess engine written in C# with UCI (Universal Chess Interface) support. Features **dual-layer architecture** with bitboard performance and proven tournament reliability.
 
