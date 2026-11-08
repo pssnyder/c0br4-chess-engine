@@ -5,13 +5,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <AssemblyName>C0BR4_v3.3</AssemblyName>
+    <AssemblyName>C0BR4_v4.0</AssemblyName>
     <RootNamespace>C0BR4ChessEngine</RootNamespace>
-    <AssemblyVersion>3.3.0.0</AssemblyVersion>
-    <FileVersion>3.3.0.0</FileVersion>
-    <Version>3.3.0</Version>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
+    <Version>4.0.0-dev</Version>
     <Authors>C0BR4 Chess Engine Project</Authors>
-    <Description>C0BR4 UCI Chess Engine v3.3 - Adaptive Time Management and Depth Search</Description>
+    <Description>C0BR4 v4 development candidate - V7P3R v18.3 evaluation alignment; search parity pending</Description>
     <Copyright>2025</Copyright>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
@@ -19,6 +19,7 @@
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
     <PublishTrimmed>false</PublishTrimmed>
     <StartupObject>C0BR4ChessEngine.Program</StartupObject>
+    <DefaultItemExcludes>$(DefaultItemExcludes);C0BR4ChessEngine_v3.5_dev/**</DefaultItemExcludes>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

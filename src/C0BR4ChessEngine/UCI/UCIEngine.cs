@@ -18,7 +18,7 @@ namespace C0BR4ChessEngine.UCI
         private Board board = new();
         private IChessBot bot = new TranspositionSearchBot(); // v0.6: Alpha-beta with move ordering, quiescence, and transposition table
         private bool isRunning = true;
-        private const string EngineVersion = "v3.3";
+        private const string EngineVersion = "v4.0.0-dev";
 
         public UCIEngine()
         {
@@ -534,8 +534,10 @@ namespace C0BR4ChessEngine.UCI
 
         private void RunEval()
         {
-            var evaluator = new Evaluation.SimpleEvaluator();
+            var evaluator = new ViperEvaluator();
             int evaluation = evaluator.Evaluate(board);
+            var (material, pst, strategic) = evaluator.EvaluateComponents(board);
+            Console.WriteLine($"info string evaluation material {material} pst {pst} strategic {strategic} score {evaluation}");
             Console.WriteLine($"Evaluation: {evaluation} cp ({evaluation / 100.0:F2} pawns) from {(board.IsWhiteToMove ? "white" : "black")} perspective");
         }
 

@@ -12,12 +12,21 @@ namespace C0BR4ChessEngine.Search
     /// </summary>
     public class TranspositionSearchBot : IChessBot
     {
-        private readonly SimpleEvaluator evaluator = new();
+        private readonly ViperEvaluator evaluator = new();
         private readonly TranspositionTable transpositionTable = new(100000); // 100K entries
         private long nodesSearched = 0;
         private long quiescenceNodes = 0;
         private int targetDepth = 6; // Target search depth (will be set dynamically based on time control)
         private List<Move> currentPV = new(); // Principal variation line
+        private System.Diagnostics.Stopwatch searchClock = new();
+        private TimeSpan searchLimit;
+        private sealed class SearchTimeoutException : Exception { }
+
+        private void CheckDeadline()
+        {
+            if (searchClock.Elapsed >= searchLimit)
+                throw new SearchTimeoutException();
+        }
 
         public Move Think(Board board, TimeSpan timeLimit)
         {
@@ -25,6 +34,8 @@ namespace C0BR4ChessEngine.Search
             quiescenceNodes = 0;
             currentPV.Clear();
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+            searchClock = stopwatch;
+            searchLimit = timeLimit;
             
             // Safety check - ensure we have legal moves before searching
             var legalMoves = board.GetLegalMoves();
@@ -57,7 +68,18 @@ namespace C0BR4ChessEngine.Search
                     break;
                 }
                     
-                var (move, score, pv) = SearchWithPV(board, depth);
+                Move move;
+                int score;
+                List<Move> pv;
+                try
+                {
+                    (move, score, pv) = SearchWithPV(board, depth);
+                }
+                catch (SearchTimeoutException)
+                {
+                    Console.WriteLine($"info string Search deadline reached, retaining completed depth {lastCompletedDepth}");
+                    break;
+                }
                 
                 if (move != Move.NullMove)
                 {
@@ -133,10 +155,19 @@ namespace C0BR4ChessEngine.Search
 
             foreach (var move in moves)
             {
+                CheckDeadline();
                 board.MakeMove(move);
-                var (score, childPV) = AlphaBetaWithPV(board, depth - 1, -50000, -bestScore);
+                int score;
+                List<Move> childPV;
+                try
+                {
+                    (score, childPV) = AlphaBetaWithPV(board, depth - 1, -50000, -bestScore);
+                }
+                finally
+                {
+                    board.UnmakeMove();
+                }
                 score = -score;
-                board.UnmakeMove();
 
                 if (score > bestScore)
                 {
@@ -171,6 +202,7 @@ namespace C0BR4ChessEngine.Search
         /// </summary>
         private (int score, List<Move> pv) AlphaBetaWithPV(Board board, int depth, int alpha, int beta)
         {
+            CheckDeadline();
             nodesSearched++;
 
             // Check transposition table first
@@ -230,9 +262,17 @@ namespace C0BR4ChessEngine.Search
             foreach (var move in moves)
             {
                 board.MakeMove(move);
-                var (score, childPV) = AlphaBetaWithPV(board, depth - 1, -beta, -maxScore);
+                int score;
+                List<Move> childPV;
+                try
+                {
+                    (score, childPV) = AlphaBetaWithPV(board, depth - 1, -beta, -maxScore);
+                }
+                finally
+                {
+                    board.UnmakeMove();
+                }
                 score = -score;
-                board.UnmakeMove();
 
                 if (score > maxScore)
                 {
@@ -260,6 +300,7 @@ namespace C0BR4ChessEngine.Search
         /// </summary>
         private int AlphaBeta(Board board, int depth, int alpha, int beta)
         {
+            CheckDeadline();
             nodesSearched++;
 
             // Check transposition table first
@@ -322,8 +363,15 @@ namespace C0BR4ChessEngine.Search
             foreach (var move in moves)
             {
                 board.MakeMove(move);
-                int score = -AlphaBeta(board, depth - 1, -beta, -maxScore);
-                board.UnmakeMove();
+                int score;
+                try
+                {
+                    score = -AlphaBeta(board, depth - 1, -beta, -maxScore);
+                }
+                finally
+                {
+                    board.UnmakeMove();
+                }
 
                 if (score > maxScore)
                 {
@@ -350,6 +398,7 @@ namespace C0BR4ChessEngine.Search
         /// </summary>
         private int Quiescence(Board board, int alpha, int beta)
         {
+            CheckDeadline();
             quiescenceNodes++;
 
             // Stand-pat evaluation
@@ -373,8 +422,15 @@ namespace C0BR4ChessEngine.Search
             foreach (var move in tacticalMoves)
             {
                 board.MakeMove(move);
-                int score = -Quiescence(board, -beta, -alpha);
-                board.UnmakeMove();
+                int score;
+                try
+                {
+                    score = -Quiescence(board, -beta, -alpha);
+                }
+                finally
+                {
+                    board.UnmakeMove();
+                }
 
                 if (score >= beta)
                     return beta;
@@ -421,7 +477,7 @@ namespace C0BR4ChessEngine.Search
         /// </summary>
         public void SetDepth(int depth)
         {
-            targetDepth = Math.Max(1, Math.Min(depth, 12)); // Allow up to depth 12
+            targetDepth = Math.Max(1, Math.Min(depth, 16)); // Allow up to depth 16 for classical games
         }
 
         /// <summary>
